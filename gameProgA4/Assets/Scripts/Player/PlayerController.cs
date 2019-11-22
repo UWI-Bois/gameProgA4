@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
 
     public bool facingLeft, idle;
     public bool hasDied;
-    public bool isGrounded;
+    public bool isGrounded, isHanging, canJump;
     public int direction;
 
     private float moveX, moveY;
@@ -35,6 +35,8 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        canJump = false;
+        isHanging = false;
         maxSpeed = 10;
         idle = true;
         direction = 1; // 1 = right, -1 = left
@@ -53,7 +55,7 @@ public class PlayerController : MonoBehaviour
         isGrounded = false;
         jumpForce = 300;
         hasDied = false;
-        speed = 0;
+        speed = maxSpeed;
         maxHealth = 4;
         health = maxHealth;
         score = 0;
@@ -67,7 +69,7 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         timeLeft -= Time.deltaTime;
-        timeLeft += Time.deltaTime;
+        timeElapsed += Time.deltaTime;
         Move(); // move the player
         CheckY(); // check to see if you fell off the map
         PlayerRaycast(); // used to kill enemies
@@ -122,7 +124,6 @@ public class PlayerController : MonoBehaviour
 
     void Move()
     {
-        speed = maxSpeed;
         idle = false;
         // controls
         moveX = Input.GetAxis("Horizontal");
@@ -131,8 +132,11 @@ public class PlayerController : MonoBehaviour
         animator.SetFloat("YSpeed", rb.velocity.y);
         animator.SetInteger("direction", direction);
         //if (Input.GetButtonDown("Horizontal")) ; // cool code to check button
-        
-        if (Input.GetButtonDown("Jump") && isGrounded) Jump();
+
+        if (Input.GetButtonDown("Jump"))
+        {
+            if(isGrounded || canJump) Jump();
+        }
         // animations
         // player direction
         if (moveX < 0.0f && !facingLeft) FlipPlayer();
@@ -153,27 +157,48 @@ public class PlayerController : MonoBehaviour
         transform.localScale = localScale;
     }
 
-    void OnLanding()
+    void GroundPlayer()
     {
         isGrounded = true;
+        canJump = true;
         animator.SetBool("isGrounded", true);
     }
 
     void Jump()
     {
         //animator.SetFloat("YSpeed", jumpForce);
+        //moveX = Input.GetAxis("Horizontal");
+        speed = maxSpeed;
+        rb.gravityScale = 1;
         rb.AddForce(Vector2.up * jumpForce);
         isGrounded = false;
+        isHanging = false;
+        canJump = false;
         animator.SetBool("isGrounded", isGrounded);
+        animator.SetBool("isHanging", isHanging);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // so using tilemaps, we can make new tilemaps and assign different tags to them, for ex: water and ground.
         //Debug.Log("player has collided with " + collision.collider.name + " with tag: " + collision.gameObject.tag);
-        if (collision.gameObject.tag == "groundable") OnLanding();
+        if (collision.gameObject.tag == "groundable") GroundPlayer();
+        if (collision.gameObject.tag == "hangable" && !isGrounded)
+        {
+            Hang();
+            //isHanging = false;
+            //animator.SetBool("isHanging", isHanging);
+        }
         
     }
+
+    private void Hang()
+    {
+        isHanging = true;
+        animator.SetBool("isHanging", isHanging);
+        canJump = true;
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.name == "Goal") NextLevel();
@@ -230,6 +255,10 @@ public class PlayerController : MonoBehaviour
             // destroy the enemy object after a certan time??
             //StartCoroutine(waitSeconds(3)); // wait 3 sec
             Destroy(rayDown.collider.gameObject);
+        }
+        if (rayDown.distance < 0.5f && rayDown.collider.tag == "hangable") // walk ontop of hangable terrain
+        {
+            GroundPlayer();
         }
 
         //if(rayUp.distance < 0.9f && rayUp.collider.tag == "name")

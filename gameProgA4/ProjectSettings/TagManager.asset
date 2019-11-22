@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - Goal
   - groundable
+  - hangable
   layers:
   - Default
   - TransparentFX
