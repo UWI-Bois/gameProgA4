@@ -31,11 +31,14 @@ public class PlayerController : MonoBehaviour
     public GameObject timeLeftUI;
     public GameObject playerScoreUI;
     private int coinVal;
+    public float bottDist;
 
     // Start is called before the first frame update
     void Start()
     {
+        DataManagement.dataManagement.LoadData();
         canJump = false;
+        bottDist = 0.5f;
         isHanging = false;
         maxSpeed = 10;
         idle = true;
@@ -161,6 +164,8 @@ public class PlayerController : MonoBehaviour
     {
         isGrounded = true;
         canJump = true;
+        isHanging = false;
+        animator.SetBool("isHanging", isHanging);
         animator.SetBool("isGrounded", true);
     }
 
@@ -215,12 +220,16 @@ public class PlayerController : MonoBehaviour
     {
         CountScore();
         // add exp, manage time
+
     }
 
     void CountScore()
     {
+        Debug.Log("Data says: " + DataManagement.dataManagement.highScore);
         score += (int)timeLeft * 10;
-        Debug.Log(score);
+        DataManagement.dataManagement.highScore = score;
+        DataManagement.dataManagement.SaveData();
+        Debug.Log("Saved Data says: " + DataManagement.dataManagement.highScore);
     }
 
     IEnumerator waitSeconds(float seconds)
@@ -256,7 +265,7 @@ public class PlayerController : MonoBehaviour
             //StartCoroutine(waitSeconds(3)); // wait 3 sec
             Destroy(rayDown.collider.gameObject);
         }
-        if (rayDown.distance < 0.5f && rayDown.collider.tag == "hangable") // walk ontop of hangable terrain
+        if (rayDown.distance <= bottDist && rayDown.collider.tag == "hangable") // walk ontop of hangable terrain
         {
             GroundPlayer();
         }

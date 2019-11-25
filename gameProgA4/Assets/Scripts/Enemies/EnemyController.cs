@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,16 +8,21 @@ public class EnemyController : MonoBehaviour
 
 
     public int speed;
-    public int xMoveDir;
+    public int direction;
     private Rigidbody2D rb;
     private float hitDist = 1.0f;
+    public Animator animator;
+    public bool facingLeft;
 
     // Start is called before the first frame update
     void Start()
     {
+        facingLeft = true;
         rb = GetComponent<Rigidbody2D>();
         speed = 2;
-        xMoveDir = 1;
+        direction = -1;
+        animator = GetComponent<Animator>();
+        rb.freezeRotation = true;
     }
 
     // Update is called once per frame
@@ -46,12 +52,12 @@ public class EnemyController : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(
             transform.position, 
             new Vector2(
-                xMoveDir, 0
+                direction, 0
             )
         );
 
         rb.velocity = new Vector2(
-            xMoveDir, 0
+            direction, 0
         ) * speed;
 
         if (hit.distance < hitDist)
@@ -59,9 +65,15 @@ public class EnemyController : MonoBehaviour
             Flip();
             if(hit.collider.tag == "Player")
             {
+                KillPlayer();
                 Destroy(hit.collider.gameObject);
             }
         } 
+    }
+
+    private void KillPlayer()
+    {
+        
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -74,8 +86,11 @@ public class EnemyController : MonoBehaviour
 
     void Flip()
     {
-        if (xMoveDir > 0) xMoveDir = -1;
-        else xMoveDir = 1;
+        facingLeft = !facingLeft;
+        direction *= -1;
+        Vector2 localScale = transform.localScale;
+        localScale.x *= -1;
+        transform.localScale = localScale;
     }
 
     
