@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6401473139761944921}
   - component: {fileID: 5382543781212641620}
   m_Layer: 0
-  m_Name: Player 1
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -121,22 +121,14 @@ MonoBehaviour:
   jumpForce: 300
   speed: 10
   maxSpeed: 10
-  health: 4
-  maxHealth: 4
-  score: 0
-  exp: 0
-  level: 1
-  toNextLevel: 10
-  damage: 1
-  win: 0
   facingLeft: 0
-  idle: 0
   hasDied: 0
   isGrounded: 1
-  direction: 1
+  isHanging: 0
+  canJump: 0
   animator: {fileID: 5382543781212641620}
-  timeLeftUI: {fileID: 0}
-  playerScoreUI: {fileID: 0}
+  bottDist: 0
+  coinSound: {fileID: 0}
 --- !u!61 &6401473139761944921
 BoxCollider2D:
   m_ObjectHideFlags: 0

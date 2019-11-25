@@ -9,8 +9,11 @@ TagManager:
   - Goal
   - groundable
   - hangable
-  - slime
   - EnemySlime
+  - heart
+  - Drop_Heart
+  - Drop_Coin
+  - Drop_Goal
   layers:
   - Default
   - TransparentFX
@@ -20,8 +23,8 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
+  - Ground
+  - Player
   - 
   - 
   - 

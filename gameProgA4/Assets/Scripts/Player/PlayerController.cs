@@ -21,7 +21,6 @@ public class PlayerController  : MonoBehaviour
     private Vector2 size;
     public Animator animator;
 
-    private int coinVal;
     public float bottDist;
 
     public AudioSource coinSound;
@@ -47,11 +46,10 @@ public class PlayerController  : MonoBehaviour
         canJump = isHanging = facingLeft = hasDied = isGrounded = false;
         bottDist = 0.5f;
         maxSpeed = 10;
-        coinVal = 10;
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
         animator = GetComponent<Animator>();
-        jumpForce = 300;
+        jumpForce = 350;
         speed = maxSpeed;
         size = col.bounds.size;
         distGround = col.bounds.extents.y;
@@ -154,13 +152,22 @@ public class PlayerController  : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.name == "Goal") GameManager.instance.LoadNextStage();
-        if(collision.name == "Coin") EatCoin(collision);
+        if(collision.CompareTag("Drop_Goal")) GameManager.instance.LoadNextStage();
+        if(collision.CompareTag("Drop_Coin")) EatCoin(collision);
+        if(collision.CompareTag("Drop_Heart")) EatHeart(collision);
+    }
+
+    private void EatHeart(Collider2D collision)
+    {
+        if (!GameManager.instance.isDamaged()) return; // if player is not damage, back out 
+        GameManager.instance.EatHeart();
+        Destroy(collision.gameObject);
     }
 
     private void EatCoin(Collider2D collision)
     {
-        GameManager.instance.IncreaseScore(coinVal);
+        print("eating coin");
+        GameManager.instance.EatCoin();
         // play a sound
         Destroy(collision.gameObject);
     }
@@ -184,21 +191,27 @@ public class PlayerController  : MonoBehaviour
             transform.position,
             Vector2.up // shoot a ray down
         );
+        // cast a ray to the left of the player
+        RaycastHit2D rayLeft = Physics2D.Raycast(
+            transform.position,
+            Vector2.left // shoot a ray down
+        );
+        // cast a ray to the right of the player
+        RaycastHit2D rayRight = Physics2D.Raycast(
+            transform.position,
+            Vector2.right // shoot a ray down
+        );
 
         if (rayDown == false || rayDown.collider == null) return;
 
         if (rayDown.distance < 0.9f && rayDown.collider.tag.Contains("Enemy")) // kill enemy, hit enemy
         {
-            rb.AddForce(Vector2.up * jumpForce); // force jump
-
-            rayDown.collider.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.right * 200);
-            rayDown.collider.gameObject.GetComponent<Rigidbody2D>().gravityScale = 10;
-            rayDown.collider.gameObject.GetComponent<Rigidbody2D>().freezeRotation = false; 
-            rayDown.collider.gameObject.GetComponent<BoxCollider2D>().enabled = false; // grab the component of the enemy
-            rayDown.collider.gameObject.GetComponent<EnemyController>().enabled = true; // disable the controller script assigned to the enemy
-            // destroy the enemy object after a certain time??
-            //StartCoroutine(waitSeconds(3)); // wait 3 sec
-            Destroy(rayDown.collider.gameObject);
+            if (rayDown.collider.tag.Contains("Slime"))
+            {
+                Jump();
+                //Destroy(rayDown.collider.gameObject);
+            }
+            
         }
         if (rayDown.distance <= bottDist && rayDown.collider.tag == "hangable") // walk on top of hangable terrain
         {

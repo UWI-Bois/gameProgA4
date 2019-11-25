@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
     public int score, exp, level = 0;
     public int toNextLevel = 10;
 
+    private int coinVal, heartVal, musicNoteVal, expVal;
+
     public int levelScore = 0; // score earned so far for the stage
     public int playerLives = 3;
     public int defaultLives = 3;
@@ -25,6 +27,7 @@ public class GameManager : MonoBehaviour
     // static instance of GM to be accessed from anywhere
     public static GameManager instance;
     private HudManager hudManager;
+    private int slimeVal = 1;
 
     // Awake is called before the game starts
     void Awake()
@@ -67,21 +70,43 @@ public class GameManager : MonoBehaviour
     }
 
     // increase player score
-    public void IncreaseScore(int amount)
+    public void EatCoin()
     {
-        score += amount;
-        levelScore += amount;
-
+        score += coinVal;
+        levelScore += coinVal;
         if (hudManager != null) hudManager.ResetHUD();
-
         if (score > highScore) highScore = score;
+    }
+
+    public void EatMusicNote()
+    {
+        IncreaseEXP(musicNoteVal);
+    }
+    public void EatHeart()
+    {
+        IncreaseHP(heartVal);
+    }
+
+    public void KillSlime()
+    {
+        IncreaseEXP(slimeVal);
+    }
+
+    public bool isDamaged()
+    {
+        if (health < maxHealth) return true;
+        return false;
     }
 
     public void IncreaseEXP(int amt)
     {
         exp += amt;
-        if(exp >= toNextLevel) LevelUp();
+        if (exp >= toNextLevel) LevelUp();
         if (hudManager != null) hudManager.ResetHUD();
+    }
+    public void IncreaseHP(int amt)
+    {
+        health += amt;
     }
 
     private void LevelUp()
@@ -89,6 +114,11 @@ public class GameManager : MonoBehaviour
         int diff = toNextLevel - exp;
         level++;
         if (level % 2 == 0) maxHealth++;
+        else if (level % 5 == 0)
+        {
+            maxHealth++; 
+            damage++;
+        }
         else damage++;
         health = maxHealth;
         exp += diff;
@@ -98,10 +128,11 @@ public class GameManager : MonoBehaviour
 
     void initStats()
     {
+        coinVal = 10;
         win = false;
         exp = 0;
         toNextLevel = 10;
-        level = 1;
+        level = musicNoteVal = expVal = 1;
         damage = 1;
         maxHealth = 4;
         health = maxHealth;

@@ -5,24 +5,25 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-
-
     public int speed;
     public int direction;
     private Rigidbody2D rb;
     private float hitDist = 0.7f;
     public Animator animator;
     public bool facingLeft;
+    public EnemyAttr attributes;
 
     // Start is called before the first frame update
     void Start()
     {
+        if (gameObject.tag.Contains("Slime")) attributes =(SlimeAttr) GetComponent<SlimeAttr>();
         facingLeft = true;
         rb = GetComponent<Rigidbody2D>();
         speed = 2;
         direction = -1;
         animator = GetComponent<Animator>();
         rb.freezeRotation = true;
+        print(attributes.toString());
     }
 
     // Update is called once per frame
@@ -58,16 +59,17 @@ public class EnemyController : MonoBehaviour
 
         rb.velocity = new Vector2(
             direction, 0
-        ) * speed;
+        ) * attributes.speed;
 
         if (hit.distance < hitDist)
         {
-            Flip();
+            if (hit.collider.tag.Contains("Drop")) return;
             if(hit.collider.tag == "Player")
             {
                 KillPlayer();
                 //Destroy(hit.collider.gameObject);
             }
+            Flip();
         } 
     }
 
