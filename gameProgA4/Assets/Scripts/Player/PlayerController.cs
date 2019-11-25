@@ -133,6 +133,7 @@ public class PlayerController  : MonoBehaviour
             if (collision.gameObject.tag.Contains("Slime"))
             {
                 print("bonx a slime!");
+                // take damage load an anim
             }
         }
         
