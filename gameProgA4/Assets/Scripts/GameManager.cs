@@ -81,6 +81,8 @@ public class GameManager : MonoBehaviour
     public void EatMusicNote()
     {
         IncreaseEXP(musicNoteVal);
+        timeLeft += musicNoteVal + 2;
+        timeElapsed -= musicNoteVal + 2;
     }
     public void EatHeart()
     {

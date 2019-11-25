@@ -14,8 +14,7 @@ public class PlayerController  : MonoBehaviour
     public bool hasDied;
     public bool isGrounded, isHanging, canJump;
 
-    private float moveX, moveY;
-    private float distGround;
+    private float moveX;
     private Rigidbody2D rb;
     private Collider2D col;
     private Vector2 size;
@@ -45,14 +44,13 @@ public class PlayerController  : MonoBehaviour
         DataManagement.dataManagement.LoadData();
         canJump = isHanging = facingLeft = hasDied = isGrounded = false;
         bottDist = 0.5f;
-        maxSpeed = 10;
+        maxSpeed = 6;
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
         animator = GetComponent<Animator>();
         jumpForce = 350;
         speed = maxSpeed;
         size = col.bounds.size;
-        distGround = col.bounds.extents.y;
         rb.freezeRotation = true;
     }
 
@@ -75,7 +73,6 @@ public class PlayerController  : MonoBehaviour
     {
         // controls
         moveX = Input.GetAxis("Horizontal");
-        moveY = Input.GetAxis("Vertical");
         animator.SetFloat("XSpeed", Mathf.Abs(rb.velocity.x));
         animator.SetFloat("YSpeed", rb.velocity.y);
         //if (Input.GetButtonDown("Horizontal")) ; // cool code to check button
@@ -153,6 +150,7 @@ public class PlayerController  : MonoBehaviour
         if(collision.CompareTag("Drop_Goal")) GameManager.instance.LoadNextStage();
         if(collision.CompareTag("Drop_Coin")) EatCoin(collision);
         if(collision.CompareTag("Drop_Heart")) EatHeart(collision);
+        if(collision.CompareTag("Drop_Music")) EatMusic(collision);
     }
 
     private void EatHeart(Collider2D collision)
@@ -164,8 +162,15 @@ public class PlayerController  : MonoBehaviour
 
     private void EatCoin(Collider2D collision)
     {
-        print("eating coin");
+        //print("eating coin");
         GameManager.instance.EatCoin();
+        // play a sound
+        Destroy(collision.gameObject);
+    }
+    private void EatMusic(Collider2D collision)
+    {
+        //print("eating coin");
+        GameManager.instance.EatMusicNote();
         // play a sound
         Destroy(collision.gameObject);
     }
@@ -202,8 +207,8 @@ public class PlayerController  : MonoBehaviour
             if (rayDown.collider.tag.Contains("Slime"))
             {
                 Jump();
-                EnemyController enemyController = FindObjectOfType<EnemyController>();
-                enemyController.TakeDamage();
+                EnemyController e = rayDown.collider.GetComponent<EnemyController>();
+                e.TakeDamage();
             }
             
         }
