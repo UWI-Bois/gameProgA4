@@ -114,8 +114,6 @@ public class PlayerController  : MonoBehaviour
 
     void Jump()
     {
-        //animator.SetFloat("YSpeed", jumpForce);
-        //moveX = Input.GetAxis("Horizontal");
         speed = maxSpeed;
         rb.gravityScale = 1;
         rb.AddForce(Vector2.up * jumpForce);

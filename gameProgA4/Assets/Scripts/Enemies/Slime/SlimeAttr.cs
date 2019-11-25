@@ -10,6 +10,10 @@ public class SlimeAttr : EnemyAttr
         hp = 2;
         speed = 3;
         expVal = scoreVal = 3;
+        jumpForce = 200;
+        fallSpeed = 3;
+        direction = -1;
+        facingLeft = isGrounded = true;
         print(gameObject.tag.ToString());
     }
 

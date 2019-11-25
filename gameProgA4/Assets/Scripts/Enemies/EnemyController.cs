@@ -5,40 +5,60 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    public int speed;
-    public int direction;
+    
     private Rigidbody2D rb;
-    private float hitDist = 0.7f;
     public Animator animator;
-    public bool facingLeft;
     public EnemyAttr attributes;
+    public Vector2 initPos;
 
     // Start is called before the first frame update
     void Start()
     {
         if (gameObject.tag.Contains("Slime")) attributes =(SlimeAttr) GetComponent<SlimeAttr>();
-        facingLeft = true;
         rb = GetComponent<Rigidbody2D>();
-        speed = 2;
-        direction = -1;
         animator = GetComponent<Animator>();
         rb.freezeRotation = true;
-        print(attributes.toString());
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        Move();
+        animator.SetFloat("velX", rb.velocity.x);
+        animator.SetFloat("velY", rb.velocity.y);
+        initPos = rb.position;
         CheckY();
+        Move();
+        checkRaycast();
+        
+    }
+
+    private void Update()
+    {
+        SleepEnemy();
+        CheckStuck();
+    }
+
+    void SleepEnemy()
+    {
+        if (rb.velocity == Vector2.zero) rb.Sleep();
+    }
+
+    void GroundEnemy()
+    {
+        attributes.isGrounded = true;
+        animator.SetBool("isGrounded", true);
+    }
+
+    void Jump()
+    {
+        rb.gravityScale = 1;
+        rb.AddForce(Vector2.up * attributes.jumpForce);
+        attributes.isGrounded = false;
+        animator.SetBool("isGrounded", attributes.isGrounded);
     }
 
     private void CheckY()
     {
-        // this function will check the y value of the player, as well as the y velocity
-        // this is actual dogshit garbage and you should feel bad for using this
-        //if ((Vector3)rb.velocity == Vector3.zero) isGrounded = true; 
-        //else isGrounded = false;
         int yDead = -7;
         if (transform.position.y <= yDead)
         {
@@ -48,29 +68,47 @@ public class EnemyController : MonoBehaviour
 
     void Move()
     {
+        rb.velocity = new Vector2(
+            attributes.direction, 0
+        ) * attributes.speed;
+        //if (attributes.isStuck) Jump();
+    }
+
+    void CheckStuck()
+    {
+        if (rb.IsSleeping())
+        {
+            attributes.isStuck = true;
+            rb.WakeUp();
+            //print("vel = 0, forcing jump");
+            Jump();
+        }
+        //else if (rb.position == initPos) attributes.isStuck = true;
+        //else if (rb.velocity.y != 0) attributes.isStuck = true;
+        else attributes.isStuck = false;
+    }
+
+    void checkRaycast()
+    {
         // check the distance between enemy and the object its colliding with
         // if the distance is 0.7, do something
         RaycastHit2D hit = Physics2D.Raycast(
-            transform.position, 
+            transform.position,
             new Vector2(
-                direction, 0
+                attributes.direction, 0
             )
         );
 
-        rb.velocity = new Vector2(
-            direction, 0
-        ) * attributes.speed;
-
-        if (hit.distance < hitDist)
+        if (hit.distance < attributes.hitDist)
         {
             if (hit.collider.tag.Contains("Drop")) return;
-            if(hit.collider.tag == "Player")
+            if (hit.collider.tag == "Player")
             {
                 KillPlayer();
                 //Destroy(hit.collider.gameObject);
             }
             Flip();
-        } 
+        }
     }
 
     private void KillPlayer()
@@ -80,16 +118,14 @@ public class EnemyController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // so using tilemaps, we can make new tilemaps and assign different tags to them, for ex: water and ground.
-        //Debug.Log("enemy has collided with " + collision.collider.name + " with tag: " + collision.gameObject.tag);
-        //if (collision.gameObject.tag == "groundable");
+        if (collision.gameObject.tag == "groundable") GroundEnemy();
     }
 
 
     void Flip()
     {
-        facingLeft = !facingLeft;
-        direction *= -1;
+        attributes.facingLeft = !attributes.facingLeft;
+        attributes.direction *= -1;
         Vector2 localScale = transform.localScale;
         localScale.x *= -1;
         transform.localScale = localScale;

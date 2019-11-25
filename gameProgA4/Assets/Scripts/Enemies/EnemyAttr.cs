@@ -4,13 +4,16 @@ using UnityEngine;
 
 public class EnemyAttr : MonoBehaviour
 {
-    public int hp = 2;
-    public int expVal, scoreVal;
-    public int speed;
+    public int hp, expVal, scoreVal;
+    public int speed, jumpForce, fallSpeed;
+    public bool isStuck, isFalling, facingLeft, isGrounded;
+    public int direction; // right = 1, left = -1;
+    public float hitDist = 0.6f;
     // Start is called before the first frame update
     void Start()
     {
-        hp = expVal = scoreVal = speed = 1;
+        hp = expVal = scoreVal = speed = jumpForce = fallSpeed = direction = 1;
+        isStuck = isFalling = facingLeft = isGrounded = false;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -23,7 +26,8 @@ public class EnemyAttr : MonoBehaviour
         string s = "hp: " + hp
             + "\n expVal: " + expVal
             + "\n scoreVal: " + scoreVal
-            + "\n speed: " + speed;
+            + "\n speed: " + speed
+            + "\n jumpForce: " + jumpForce;
         return s;
     }
 }
