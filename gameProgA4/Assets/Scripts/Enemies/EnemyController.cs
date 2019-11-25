@@ -10,7 +10,7 @@ public class EnemyController : MonoBehaviour
     public int speed;
     public int direction;
     private Rigidbody2D rb;
-    private float hitDist = 1.0f;
+    private float hitDist = 0.7f;
     public Animator animator;
     public bool facingLeft;
 
@@ -66,7 +66,7 @@ public class EnemyController : MonoBehaviour
             if(hit.collider.tag == "Player")
             {
                 KillPlayer();
-                Destroy(hit.collider.gameObject);
+                //Destroy(hit.collider.gameObject);
             }
         } 
     }

@@ -9,6 +9,8 @@ TagManager:
   - Goal
   - groundable
   - hangable
+  - slime
+  - EnemySlime
   layers:
   - Default
   - TransparentFX
