@@ -6,14 +6,14 @@ public class EnemyAttr : MonoBehaviour
 {
     public int hp, expVal, scoreVal;
     public int speed, jumpForce, fallSpeed;
-    public bool isStuck, isFalling, facingLeft, isGrounded;
+    public bool isStuck, isFalling, facingLeft, isGrounded, isDamaged, isDead;
     public int direction; // right = 1, left = -1;
     public float hitDist = 0.6f;
     // Start is called before the first frame update
     void Start()
     {
         hp = expVal = scoreVal = speed = jumpForce = fallSpeed = direction = 1;
-        isStuck = isFalling = facingLeft = isGrounded = false;
+        isStuck = isFalling = facingLeft = isGrounded = isDamaged = isDead = false;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

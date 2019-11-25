@@ -7,7 +7,7 @@ public class SlimeAttr : EnemyAttr
     // Start is called before the first frame update
     void Start()
     {
-        hp = 2;
+        hp = 3;
         speed = 3;
         expVal = scoreVal = 3;
         jumpForce = 200;

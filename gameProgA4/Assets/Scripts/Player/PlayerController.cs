@@ -171,11 +171,6 @@ public class PlayerController  : MonoBehaviour
     }
 
 
-    IEnumerator waitSeconds(float seconds)
-    {
-        yield return new WaitForSeconds(seconds);
-    }
-
     void PlayerRaycast()
     {
         // use this to kill enemies
@@ -207,7 +202,8 @@ public class PlayerController  : MonoBehaviour
             if (rayDown.collider.tag.Contains("Slime"))
             {
                 Jump();
-                //Destroy(rayDown.collider.gameObject);
+                EnemyController enemyController = FindObjectOfType<EnemyController>();
+                enemyController.TakeDamage();
             }
             
         }

@@ -23,10 +23,12 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        animator.SetFloat("velX", rb.velocity.x);
+        CheckY();
+        if (attributes.isDead) return; // if dead, dont check or move
+        animator.SetFloat("velX", Mathf.Abs(rb.velocity.x));
         animator.SetFloat("velY", rb.velocity.y);
         initPos = rb.position;
-        CheckY();
+        
         Move();
         checkRaycast();
         
@@ -121,7 +123,6 @@ public class EnemyController : MonoBehaviour
         if (collision.gameObject.tag == "groundable") GroundEnemy();
     }
 
-
     void Flip()
     {
         attributes.facingLeft = !attributes.facingLeft;
@@ -131,5 +132,27 @@ public class EnemyController : MonoBehaviour
         transform.localScale = localScale;
     }
 
-    
+    public void TakeDamage()
+    {
+        attributes.hp -= GameManager.instance.damage;
+        attributes.isDamaged = true;
+        animator.SetBool("isDamaged", attributes.isDamaged);
+        if (attributes.hp <= 0) Die();
+    }
+
+    public IEnumerator DestroyEnemy()
+    {
+        yield return new WaitForSeconds(3);
+        Destroy(gameObject);
+    }
+
+
+
+    void Die()
+    {
+        attributes.isDead = true;
+        animator.SetBool("isDead", true);
+        GameManager.instance.IncreaseEXP(attributes.expVal);
+        StartCoroutine(DestroyEnemy());
+    }
 }
