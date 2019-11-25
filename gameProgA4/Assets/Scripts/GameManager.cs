@@ -10,18 +10,18 @@ public class GameManager : MonoBehaviour
     public int health, maxHealth;
     public int damage;
     public bool win;
-    public int score, exp, level = 0;
+    public int score, exp, level;
     public int toNextLevel = 10;
 
-    private int coinVal, heartVal, musicNoteVal, expVal;
+    private int coinVal, heartVal, musicNoteVal;
 
     public int levelScore = 0; // score earned so far for the stage
     public int playerLives = 3;
     public int defaultLives = 3;
     public int highScore = 0;
-    public int currentStage = 1;
+    public int currentStage;
     // amount of stages
-    public int maxStage = 1;
+    public int maxStage;
     //timer stuff
     public float timeLeft, timeElapsed;
     // static instance of GM to be accessed from anywhere
@@ -125,6 +125,7 @@ public class GameManager : MonoBehaviour
         health = maxHealth;
         exp += diff;
         toNextLevel = toNextLevel + 10;
+        if (hudManager != null) hudManager.ResetHUD();
         // probably add an effect here? sound
     }
 
@@ -134,7 +135,7 @@ public class GameManager : MonoBehaviour
         win = false;
         exp = 0;
         toNextLevel = 10;
-        level = musicNoteVal = expVal = 1;
+        level = musicNoteVal = 1;
         damage = 1;
         maxHealth = 4;
         health = maxHealth;
