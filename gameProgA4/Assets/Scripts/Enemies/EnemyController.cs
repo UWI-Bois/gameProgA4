@@ -121,6 +121,12 @@ public class EnemyController : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "groundable") GroundEnemy();
+        if (collision.gameObject.tag == "Player") DamagePlayer();
+    }
+
+    private void DamagePlayer()
+    {
+        GameManager.instance.TakeDamage(attributes.damage);
     }
 
     void Flip()
@@ -142,11 +148,9 @@ public class EnemyController : MonoBehaviour
 
     public IEnumerator DestroyEnemy()
     {
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(2);
         Destroy(gameObject);
     }
-
-
 
     void Die()
     {

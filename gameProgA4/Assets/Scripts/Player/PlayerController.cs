@@ -63,11 +63,11 @@ public class PlayerController  : MonoBehaviour
         if (transform.position.y <= yDead) GameManager.instance.Die();
     }
 
-    private IEnumerator Die()
+    public void Die()
     {
+        print("gamemanager says die");
         hasDied = true;
         animator.SetBool("hasDied", hasDied);
-        yield return new WaitForSeconds(1.5f);
     }
 
     void Move()
@@ -129,11 +129,12 @@ public class PlayerController  : MonoBehaviour
         if (collision.gameObject.tag == "groundable") GroundPlayer();
         if (collision.gameObject.tag == "hangable" && !isGrounded) Hang();
       
+        // this part isnt necessary since its easier to handle this collision as one collision within the enemycontroller
         if(collision.gameObject.tag.Contains("Enemy"))
         {
             if (collision.gameObject.tag.Contains("Slime"))
             {
-                print("bonx a slime!");
+                //print("bonx a slime!");
                 // take damage load an anim
             }
         }

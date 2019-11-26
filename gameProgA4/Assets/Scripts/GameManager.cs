@@ -49,6 +49,14 @@ public class GameManager : MonoBehaviour
         hudManager = FindObjectOfType<HudManager>();
     }
 
+    public IEnumerator WaitDie()
+    {
+        PlayerController p = GetComponent<PlayerController>();
+        p.Die();
+        yield return new WaitForSeconds(2);
+        Die();
+    }
+
     private void Start()
     {
         initStats();
@@ -69,6 +77,12 @@ public class GameManager : MonoBehaviour
     void LoadMenu()
     {
         SceneManager.LoadScene("MainMenu");
+    }
+
+    public void TakeDamage(int amt)
+    {
+        health -= amt;
+        if (health <= 0) WaitDie();
     }
 
     // increase player score
@@ -141,7 +155,7 @@ public class GameManager : MonoBehaviour
         exp = 0;
         toNextLevel = 10;
         level = musicNoteVal = 1;
-        damage = 1;
+        damage = heartVal = 1;
         maxHealth = 4;
         health = maxHealth;
         score = 0;

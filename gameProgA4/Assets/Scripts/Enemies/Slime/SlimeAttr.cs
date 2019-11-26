@@ -8,6 +8,7 @@ public class SlimeAttr : EnemyAttr
     void Start()
     {
         hp = 3;
+        damage = 1;
         speed = 3;
         expVal = scoreVal = 3;
         jumpForce = 200;
