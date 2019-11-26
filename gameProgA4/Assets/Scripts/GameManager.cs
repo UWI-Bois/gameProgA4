@@ -19,11 +19,11 @@ public class GameManager : MonoBehaviour
     public int playerLives = 3;
     public int defaultLives = 3;
     public int highScore = 0;
-    public int currentStage;
+    public int currentStage = 1;
     // amount of stages
-    public int maxStage;
+    public int maxStage = 1;
     //timer stuff
-    public float timeLeft, timeElapsed;
+    public float timeLeft, timeElapsed, timePerStage;
     // static instance of GM to be accessed from anywhere
     public static GameManager instance;
     private HudManager hudManager;
@@ -32,6 +32,8 @@ public class GameManager : MonoBehaviour
     // Awake is called before the game starts
     void Awake()
     {
+        maxStage = 1;
+        currentStage = 1;
         // check that it exists
         if (instance == null) instance = this;
         // check that it is equal to the current object
@@ -131,6 +133,9 @@ public class GameManager : MonoBehaviour
 
     void initStats()
     {
+        currentStage = 1; // check this
+        playerLives = 3;
+        timePerStage = 120f;
         coinVal = 10;
         win = false;
         exp = 0;
@@ -140,7 +145,7 @@ public class GameManager : MonoBehaviour
         maxHealth = 4;
         health = maxHealth;
         score = 0;
-        timeLeft = 120f;
+        timeLeft = timePerStage;
         timeElapsed = 0f;
         // reset score
         levelScore = 0;
@@ -152,7 +157,6 @@ public class GameManager : MonoBehaviour
         initStats();
         // go back to level 1
         if (hudManager != null) hudManager.ResetHUD();
-        currentStage = 1;
         // load level 1 scene
         SceneManager.LoadScene("Stage1");
     }
@@ -162,10 +166,17 @@ public class GameManager : MonoBehaviour
         // remove points collected on the level so far
         score -= levelScore;
         levelScore = 0;
+        ResetTime();
         // reset level
         if (hudManager != null) hudManager.ResetHUD();
         // load stage scene
         SceneManager.LoadScene("Stage" + currentStage);
+    }
+
+    private void ResetTime()
+    {
+        timeLeft = timePerStage;
+        timeElapsed = 0;
     }
 
     public void Die()
@@ -207,6 +218,7 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
+        initStats();
         SceneManager.LoadScene("GameOver");
     }
 

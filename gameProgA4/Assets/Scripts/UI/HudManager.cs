@@ -6,7 +6,7 @@ using UnityEngine;
 public class HudManager : MonoBehaviour
 {
     // score text label
-    public Text scoreLabel, timeLabel, healthLabel, damageLabel, expLabel, levelLabel;
+    public Text scoreLabel, timeLabel, healthLabel, damageLabel, expLabel, levelLabel, livesLabel;
 
     // Start is called before the first frame update
     void Start()
@@ -25,5 +25,6 @@ public class HudManager : MonoBehaviour
         levelLabel.text = "LVL: " + GameManager.instance.level;
         damageLabel.text = "DMG: " + GameManager.instance.damage;
         expLabel.text = "EXP: " + GameManager.instance.exp + "/" + GameManager.instance.toNextLevel;
+        livesLabel.text = "Lives: " + GameManager.instance.playerLives;
     }
 }

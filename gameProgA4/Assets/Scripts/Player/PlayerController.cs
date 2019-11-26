@@ -9,6 +9,7 @@ public class PlayerController  : MonoBehaviour
 {
     public int jumpForce;
     public int speed, maxSpeed;
+    public int yDead = -10;
 
     public bool facingLeft;
     public bool hasDied;
@@ -58,8 +59,8 @@ public class PlayerController  : MonoBehaviour
     {
         // this function will check the y value of the player, as well as the y velocity
         //if ((Vector3)rb.velocity == Vector3.zero) isGrounded = true; 
-        int yDead = -10;
-        if (transform.position.y <= yDead && !hasDied) GameManager.instance.ResetLevel();
+        
+        if (transform.position.y <= yDead) GameManager.instance.Die();
     }
 
     private IEnumerator Die()
