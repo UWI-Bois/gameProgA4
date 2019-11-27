@@ -146,23 +146,31 @@ public class PlayerController  : MonoBehaviour
         {
             //play sound
             Player.instance.EatCoin();
+            Destroy(collision.gameObject);
         }
         if (collision.tag.Contains("Music"))
         {
             //play sound
             Player.instance.EatMusic();
+            Destroy(collision.gameObject);
         }
         if (collision.tag.Contains("Heart"))
         {
             //play sound
             Player.instance.EatHeart();
+            Destroy(collision.gameObject);
         }
         if (collision.tag.Contains("Goal"))
         {
             //play sound
-            GameManager.instance.LoadNextStage();
+            if(GameManager.instance.enemies == 0)
+            {
+                Destroy(collision.gameObject);
+                GameManager.instance.LoadNextStage();
+            } 
+                
         }
-        Destroy(collision.gameObject);
+        
     }
 
     void PlayerRaycast()

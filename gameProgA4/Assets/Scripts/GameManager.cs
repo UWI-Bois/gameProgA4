@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 {
     //PlayerAttr.playerAttr.score of PlayerAttr.playerAttr
     public bool win;
-    public int coinVal, heartVal, musicNoteVal, slimeVal;
+    public int coinVal, heartVal, musicNoteVal, slimeVal, enemies;
 
     public int levelScore = 0; // PlayerAttr.playerAttr.score earned so far for the stage
     public int highScore = 0;
@@ -40,27 +40,20 @@ public class GameManager : MonoBehaviour
 
         // find HUD manager object
         hudManager = FindObjectOfType<HudManager>();
-
+        enemies = GameObject.Find("Enemies").transform.childCount;
+        //print("enemies: " + enemies);
     }
-
-    public IEnumerator WaitDie()
-    {
-        PlayerController p = GetComponent<PlayerController>();
-        p.Die();
-        yield return new WaitForSeconds(2);
-        KillPlayer();
-    }
-
     private void Start()
     {
         initGame();
-        print(Player.instance.ToString());
+        //print(Player.instance.ToString());
     }
-
     private void Update()
     {
         TickTime();
+        enemies = GameObject.Find("Enemies").transform.childCount;
     }
+
 
     void TickTime()
     {

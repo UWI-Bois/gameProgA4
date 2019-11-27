@@ -16,11 +16,6 @@ public class EnemyAttr : MonoBehaviour
         isStuck = isFalling = facingLeft = isGrounded = isDamaged = isDead = false;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-
-    }
-
     public string toString()
     {
         string s = "hp: " + hp
