@@ -9,7 +9,7 @@ public class SlimeAttr : EnemyAttr
     {
         hp = 3;
         damage = 1;
-        speed = 3;
+        speed = maxSpeed = 3;
         expVal = scoreVal = 3;
         jumpForce = 200;
         fallSpeed = 3;

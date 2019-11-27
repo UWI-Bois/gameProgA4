@@ -5,14 +5,14 @@ using UnityEngine;
 public class EnemyAttr : MonoBehaviour
 {
     public int hp, expVal, scoreVal, damage;
-    public int speed, jumpForce, fallSpeed;
+    public int speed, jumpForce, fallSpeed, maxSpeed;
     public bool isStuck, isFalling, facingLeft, isGrounded, isDamaged, isDead;
     public int direction; // right = 1, left = -1;
     public float hitDist = 0.6f;
     // Start is called before the first frame update
     void Start()
     {
-        hp = expVal = scoreVal = speed = jumpForce = fallSpeed = damage = direction = 1;
+        hp = expVal = scoreVal = maxSpeed = speed = jumpForce = fallSpeed = damage = direction = 1;
         isStuck = isFalling = facingLeft = isGrounded = isDamaged = isDead = false;
     }
 

@@ -46,14 +46,14 @@ public class PlayerController  : MonoBehaviour
 
     private void CheckY()
     {
-        if (transform.position.y <= yDead) GameManager.instance.Die();
+        if (transform.position.y <= yDead) GameManager.instance.KillPlayer();
     }
 
     public void Die()
     {
         print("gamemanager says die");
-        PlayerAttr.instance.hasDied = true;
-        animator.SetBool("hasDied", PlayerAttr.instance.hasDied);
+        Player.instance.hasDied = true;
+        animator.SetBool("hasDied", Player.instance.hasDied);
     }
 
     void Move()
@@ -66,22 +66,22 @@ public class PlayerController  : MonoBehaviour
 
         if (Input.GetButtonDown("Jump"))
         {
-            if(PlayerAttr.instance.isGrounded || PlayerAttr.instance.canJump) Jump();
+            if(Player.instance.isGrounded || Player.instance.canJump) Jump();
         }
         // animations
         // player direction
-        if (moveX < 0.0f && !PlayerAttr.instance.facingLeft) FlipPlayer();
-        else if (moveX > 0.0f && PlayerAttr.instance.facingLeft) FlipPlayer();
+        if (moveX < 0.0f && !Player.instance.facingLeft) FlipPlayer();
+        else if (moveX > 0.0f && Player.instance.facingLeft) FlipPlayer();
         // physics
         rb.velocity = new Vector2(
-            moveX * PlayerAttr.instance.speed,
+            moveX * Player.instance.speed,
             rb.velocity.y
         );
     }
 
     void FlipPlayer()
     {
-        PlayerAttr.instance.facingLeft = !PlayerAttr.instance.facingLeft;
+        Player.instance.facingLeft = !Player.instance.facingLeft;
         Vector2 localScale = transform.localScale;
         localScale.x *= -1;
         transform.localScale = localScale;
@@ -89,23 +89,23 @@ public class PlayerController  : MonoBehaviour
 
     void GroundPlayer()
     {
-        PlayerAttr.instance.isGrounded = true;
-        PlayerAttr.instance.canJump = true;
-        PlayerAttr.instance.isHanging = false;
-        animator.SetBool("isHanging", PlayerAttr.instance.isHanging);
+        Player.instance.isGrounded = true;
+        Player.instance.canJump = true;
+        Player.instance.isHanging = false;
+        animator.SetBool("isHanging", Player.instance.isHanging);
         animator.SetBool("isGrounded", true);
     }
 
     void Jump()
     {
-        PlayerAttr.instance.speed = PlayerAttr.instance.maxSpeed;
+        Player.instance.speed = Player.instance.maxSpeed;
         rb.gravityScale = 1;
-        rb.AddForce(Vector2.up * PlayerAttr.instance.jumpForce);
-        PlayerAttr.instance.isGrounded = false;
-        PlayerAttr.instance.isHanging = false;
-        PlayerAttr.instance.canJump = false;
-        animator.SetBool("isGrounded", PlayerAttr.instance.isGrounded);
-        animator.SetBool("isHanging", PlayerAttr.instance.isHanging);
+        rb.AddForce(Vector2.up * Player.instance.jumpForce);
+        Player.instance.isGrounded = false;
+        Player.instance.isHanging = false;
+        Player.instance.canJump = false;
+        animator.SetBool("isGrounded", Player.instance.isGrounded);
+        animator.SetBool("isHanging", Player.instance.isHanging);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -113,15 +113,16 @@ public class PlayerController  : MonoBehaviour
         // so using tilemaps, we can make new tilemaps and assign different tags to them, for ex: water and ground.
         //Debug.Log("player has collided with " + collision.collider.name + " with tag: " + collision.gameObject.tag);
         if (collision.gameObject.tag == "groundable") GroundPlayer();
-        if (collision.gameObject.tag == "hangable" && !PlayerAttr.instance.isGrounded) Hang();
+        if (collision.gameObject.tag == "hangable" && !Player.instance.isGrounded) Hang();
       
         // this part isnt necessary since its easier to handle this collision as one collision within the enemycontroller
         if(collision.gameObject.tag.Contains("Enemy"))
         {
+            EnemyController enemy = collision.gameObject.GetComponent<EnemyController>();
             if (collision.gameObject.tag.Contains("Slime"))
             {
-                //print("bonx a slime!");
-                // take damage load an anim
+                Player.instance.TakeDamage(enemy.attributes.damage);
+                if (Player.instance.health <= 0) GameManager.instance.KillPlayer();
             }
         }
         
@@ -129,41 +130,40 @@ public class PlayerController  : MonoBehaviour
 
     private void Hang()
     {
-        PlayerAttr.instance.isHanging = true;
-        animator.SetBool("isHanging", PlayerAttr.instance.isHanging);
-        PlayerAttr.instance.canJump = true;
+        Player.instance.isHanging = true;
+        animator.SetBool("isHanging", Player.instance.isHanging);
+        Player.instance.canJump = true;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("Drop_Goal")) GameManager.instance.LoadNextStage();
-        if(collision.CompareTag("Drop_Coin")) EatCoin(collision);
-        if(collision.CompareTag("Drop_Heart")) EatHeart(collision);
-        if(collision.CompareTag("Drop_Music")) EatMusic(collision);
+        if (collision.tag.Contains("Drop")) PickUpDrop(collision);
     }
 
-    private void EatHeart(Collider2D collision)
+    void PickUpDrop(Collider2D collision)
     {
-        if (!GameManager.instance.isDamaged()) return; // if player is not damage, back out 
-        GameManager.instance.EatHeart();
+        if (collision.tag.Contains("Coin"))
+        {
+            //play sound
+            Player.instance.EatCoin();
+        }
+        if (collision.tag.Contains("Music"))
+        {
+            //play sound
+            Player.instance.EatMusic();
+        }
+        if (collision.tag.Contains("Heart"))
+        {
+            //play sound
+            Player.instance.EatHeart();
+        }
+        if (collision.tag.Contains("Goal"))
+        {
+            //play sound
+            GameManager.instance.LoadNextStage();
+        }
         Destroy(collision.gameObject);
     }
-
-    private void EatCoin(Collider2D collision)
-    {
-        //print("eating coin");
-        GameManager.instance.EatCoin();
-        // play a sound
-        Destroy(collision.gameObject);
-    }
-    private void EatMusic(Collider2D collision)
-    {
-        //print("eating coin");
-        GameManager.instance.EatMusicNote();
-        // play a sound
-        Destroy(collision.gameObject);
-    }
-
 
     void PlayerRaycast()
     {
@@ -193,11 +193,11 @@ public class PlayerController  : MonoBehaviour
 
         if (rayDown.distance < 0.9f && rayDown.collider.tag.Contains("Enemy")) // kill enemy, hit enemy
         {
+            EnemyController enemy = rayDown.collider.GetComponent<EnemyController>();
             if (rayDown.collider.tag.Contains("Slime"))
             {
                 Jump();
-                EnemyController e = rayDown.collider.GetComponent<EnemyController>();
-                e.TakeDamage();
+                enemy.TakeDamage();
             }
             
         }

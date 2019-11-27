@@ -82,12 +82,20 @@ public class EnemyController : MonoBehaviour
         {
             attributes.isStuck = true;
             rb.WakeUp();
-            //print("vel = 0, forcing jump");
             Jump();
         }
         //else if (rb.position == initPos) attributes.isStuck = true;
         //else if (rb.velocity.y != 0) attributes.isStuck = true;
         else attributes.isStuck = false;
+    }
+    public IEnumerator Attack()
+    {
+        attributes.speed = 0;
+        animator.SetBool("isAttacking", true);
+        yield return new WaitForSeconds(2);
+        attributes.speed = attributes.maxSpeed;
+        animator.SetBool("isAttacking", false);
+        Flip();
     }
 
     void checkRaycast()
@@ -106,21 +114,18 @@ public class EnemyController : MonoBehaviour
             if (hit.collider.tag.Contains("Drop")) return;
             if (hit.collider.tag == "Player")
             {
-                //Destroy(hit.collider.gameObject);
+                //print("Raycast: enemy collided with player");
+                StartCoroutine(Attack());
             }
-            Flip();
+            
+            
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "groundable") GroundEnemy();
-        if (collision.gameObject.tag == "Player") DamagePlayer();
-    }
-
-    private void DamagePlayer()
-    {
-        GameManager.instance.TakeDamage(attributes.damage);
+        if (collision.gameObject.tag == "hangable") Flip();
     }
 
     void Flip()
@@ -134,7 +139,7 @@ public class EnemyController : MonoBehaviour
 
     public void TakeDamage()
     {
-        attributes.hp -= PlayerAttr.instance.damage;
+        attributes.hp -= Player.instance.damage;
         attributes.isDamaged = true;
         animator.SetBool("isDamaged", attributes.isDamaged);
         if (attributes.hp <= 0) Die();
@@ -150,7 +155,7 @@ public class EnemyController : MonoBehaviour
     {
         attributes.isDead = true;
         animator.SetBool("isDead", true);
-        GameManager.instance.IncreaseEXP(attributes.expVal);
+        Player.instance.IncreaseEXP(attributes.expVal);
         StartCoroutine(DestroyEnemy());
     }
 }
