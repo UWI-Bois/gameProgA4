@@ -20,11 +20,11 @@ public class HudManager : MonoBehaviour
     public void ResetHUD()
     {
         timeLabel.text = "Time: " + (int)GameManager.instance.timeLeft;
-        scoreLabel.text = "Score: " + PlayerAttr.playerAttr.score;
-        healthLabel.text = "HP: " + PlayerAttr.playerAttr.health;
-        levelLabel.text = "LVL: " + PlayerAttr.playerAttr.level;
-        damageLabel.text = "DMG: " + PlayerAttr.playerAttr.damage;
-        expLabel.text = "EXP: " + PlayerAttr.playerAttr.exp+ "/" + PlayerAttr.playerAttr.toNextLevel;
-        livesLabel.text = "Lives: " + PlayerAttr.playerAttr.lives;
+        scoreLabel.text = "Score: " + PlayerAttr.instance.score;
+        healthLabel.text = "HP: " + PlayerAttr.instance.health;
+        levelLabel.text = "LVL: " + PlayerAttr.instance.level;
+        damageLabel.text = "DMG: " + PlayerAttr.instance.damage;
+        expLabel.text = "EXP: " + PlayerAttr.instance.exp+ "/" + PlayerAttr.instance.toNextLevel;
+        livesLabel.text = "Lives: " + PlayerAttr.instance.lives;
     }
 }

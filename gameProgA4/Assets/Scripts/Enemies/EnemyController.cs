@@ -106,16 +106,10 @@ public class EnemyController : MonoBehaviour
             if (hit.collider.tag.Contains("Drop")) return;
             if (hit.collider.tag == "Player")
             {
-                KillPlayer();
                 //Destroy(hit.collider.gameObject);
             }
             Flip();
         }
-    }
-
-    private void KillPlayer()
-    {
-        
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -140,7 +134,7 @@ public class EnemyController : MonoBehaviour
 
     public void TakeDamage()
     {
-        attributes.hp -= PlayerAttr.playerAttr.damage;
+        attributes.hp -= PlayerAttr.instance.damage;
         attributes.isDamaged = true;
         animator.SetBool("isDamaged", attributes.isDamaged);
         if (attributes.hp <= 0) Die();

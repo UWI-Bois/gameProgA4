@@ -16,7 +16,7 @@ public class GameOverManager : MonoBehaviour
     void Start()
     {
         // set the text property of the PlayerAttr.playerAttr score 
-        playerScoreValue.text = PlayerAttr.playerAttr.score.ToString();
+        playerScoreValue.text = PlayerAttr.instance.score.ToString();
         // set the text of high score
         highScoreValue.text = GameManager.instance.highScore.ToString();
         DetermineWin();

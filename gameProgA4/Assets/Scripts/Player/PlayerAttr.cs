@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class PlayerAttr : MonoBehaviour
 {
-    public int health, maxHealth, exp, toNextLevel, damage, score, level, lives, defaultLives;
+    public int health, maxHealth, exp, toNextLevel, damage, score, level, lives, defaultLives, jumpForce, speed, maxSpeed;
+    public bool isGrounded, isHanging, canJump, hasDied, facingLeft;
 
-    public static PlayerAttr playerAttr;
+    public static PlayerAttr instance;
 
     private void Awake()
     {
-        if (playerAttr == null) playerAttr = this;
+        if (instance == null) instance = this;
         // check that it is equal to the current object
-        else if (playerAttr != this)
+        else if (instance != this)
         {
             Destroy(gameObject);
         }
@@ -27,6 +28,9 @@ public class PlayerAttr : MonoBehaviour
         toNextLevel = 10;
         lives = defaultLives = 3;
         score = exp = 0;
+        canJump = isHanging = facingLeft = hasDied = isGrounded = false;
+        jumpForce = 350;
+        speed = maxSpeed = 6;
     }
     
     override public string ToString()

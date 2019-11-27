@@ -7,14 +7,7 @@ using UnityEngine.UI; // access ui elements
 
 public class PlayerController  : MonoBehaviour
 {
-    public int jumpForce;
-    public int speed, maxSpeed;
     public int yDead = -10;
-
-    public bool facingLeft;
-    public bool hasDied;
-    public bool isGrounded, isHanging, canJump;
-
     private float moveX;
     private Rigidbody2D rb;
     private Collider2D col;
@@ -28,7 +21,7 @@ public class PlayerController  : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        initPlayer();
+        initController();
         //print(size.ToString() + col.ToString());
     }
 
@@ -40,34 +33,27 @@ public class PlayerController  : MonoBehaviour
         PlayerRaycast(); // used to kill enemies
     }
 
-    void initPlayer()
+    void initController()
     {
         DataManagement.dataManagement.LoadData();
-        canJump = isHanging = facingLeft = hasDied = isGrounded = false;
         bottDist = 0.5f;
-        maxSpeed = 6;
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
         animator = GetComponent<Animator>();
-        jumpForce = 350;
-        speed = maxSpeed;
         size = col.bounds.size;
         rb.freezeRotation = true;
     }
 
     private void CheckY()
     {
-        // this function will check the y value of the player, as well as the y velocity
-        //if ((Vector3)rb.velocity == Vector3.zero) isGrounded = true; 
-        
         if (transform.position.y <= yDead) GameManager.instance.Die();
     }
 
     public void Die()
     {
         print("gamemanager says die");
-        hasDied = true;
-        animator.SetBool("hasDied", hasDied);
+        PlayerAttr.instance.hasDied = true;
+        animator.SetBool("hasDied", PlayerAttr.instance.hasDied);
     }
 
     void Move()
@@ -80,22 +66,22 @@ public class PlayerController  : MonoBehaviour
 
         if (Input.GetButtonDown("Jump"))
         {
-            if(isGrounded || canJump) Jump();
+            if(PlayerAttr.instance.isGrounded || PlayerAttr.instance.canJump) Jump();
         }
         // animations
         // player direction
-        if (moveX < 0.0f && !facingLeft) FlipPlayer();
-        else if (moveX > 0.0f && facingLeft) FlipPlayer();
+        if (moveX < 0.0f && !PlayerAttr.instance.facingLeft) FlipPlayer();
+        else if (moveX > 0.0f && PlayerAttr.instance.facingLeft) FlipPlayer();
         // physics
         rb.velocity = new Vector2(
-            moveX * speed,
+            moveX * PlayerAttr.instance.speed,
             rb.velocity.y
         );
     }
 
     void FlipPlayer()
     {
-        facingLeft = !facingLeft;
+        PlayerAttr.instance.facingLeft = !PlayerAttr.instance.facingLeft;
         Vector2 localScale = transform.localScale;
         localScale.x *= -1;
         transform.localScale = localScale;
@@ -103,23 +89,23 @@ public class PlayerController  : MonoBehaviour
 
     void GroundPlayer()
     {
-        isGrounded = true;
-        canJump = true;
-        isHanging = false;
-        animator.SetBool("isHanging", isHanging);
+        PlayerAttr.instance.isGrounded = true;
+        PlayerAttr.instance.canJump = true;
+        PlayerAttr.instance.isHanging = false;
+        animator.SetBool("isHanging", PlayerAttr.instance.isHanging);
         animator.SetBool("isGrounded", true);
     }
 
     void Jump()
     {
-        speed = maxSpeed;
+        PlayerAttr.instance.speed = PlayerAttr.instance.maxSpeed;
         rb.gravityScale = 1;
-        rb.AddForce(Vector2.up * jumpForce);
-        isGrounded = false;
-        isHanging = false;
-        canJump = false;
-        animator.SetBool("isGrounded", isGrounded);
-        animator.SetBool("isHanging", isHanging);
+        rb.AddForce(Vector2.up * PlayerAttr.instance.jumpForce);
+        PlayerAttr.instance.isGrounded = false;
+        PlayerAttr.instance.isHanging = false;
+        PlayerAttr.instance.canJump = false;
+        animator.SetBool("isGrounded", PlayerAttr.instance.isGrounded);
+        animator.SetBool("isHanging", PlayerAttr.instance.isHanging);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -127,7 +113,7 @@ public class PlayerController  : MonoBehaviour
         // so using tilemaps, we can make new tilemaps and assign different tags to them, for ex: water and ground.
         //Debug.Log("player has collided with " + collision.collider.name + " with tag: " + collision.gameObject.tag);
         if (collision.gameObject.tag == "groundable") GroundPlayer();
-        if (collision.gameObject.tag == "hangable" && !isGrounded) Hang();
+        if (collision.gameObject.tag == "hangable" && !PlayerAttr.instance.isGrounded) Hang();
       
         // this part isnt necessary since its easier to handle this collision as one collision within the enemycontroller
         if(collision.gameObject.tag.Contains("Enemy"))
@@ -143,9 +129,9 @@ public class PlayerController  : MonoBehaviour
 
     private void Hang()
     {
-        isHanging = true;
-        animator.SetBool("isHanging", isHanging);
-        canJump = true;
+        PlayerAttr.instance.isHanging = true;
+        animator.SetBool("isHanging", PlayerAttr.instance.isHanging);
+        PlayerAttr.instance.canJump = true;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
