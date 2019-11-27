@@ -17,6 +17,7 @@ TagManager:
   - Drop_Music
   - Enemy_Skeleton
   - Enemy_Slime
+  - Enemy_Dio
   layers:
   - Default
   - TransparentFX

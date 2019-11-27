@@ -16,6 +16,7 @@ public class EnemyController : MonoBehaviour
     {
         if (gameObject.tag.Contains("Slime")) attributes =(SlimeAttr) GetComponent<SlimeAttr>();
         if (gameObject.tag.Contains("Skeleton")) attributes =(SkeletonAttr) GetComponent<SkeletonAttr>();
+        if (gameObject.tag.Contains("Dio")) attributes =(DioAttr) GetComponent<DioAttr>();
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         rb.freezeRotation = true;
