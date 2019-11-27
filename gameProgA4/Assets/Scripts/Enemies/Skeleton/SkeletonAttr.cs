@@ -17,6 +17,8 @@ public class SkeletonAttr : EnemyAttr
         facingLeft = false; 
         isGrounded = true;
         name = "skele";
+
+        audioSource = GetComponent<AudioSource>();
         //print(gameObject.tag.ToString());
     }
 

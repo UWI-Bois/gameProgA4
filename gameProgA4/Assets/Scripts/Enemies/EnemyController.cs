@@ -15,8 +15,8 @@ public class EnemyController : MonoBehaviour
     void Start()
     {
         if (gameObject.tag.Contains("Slime")) attributes = GetComponent<SlimeAttr>();
-        if (gameObject.tag.Contains("Skeleton")) attributes =(SkeletonAttr) GetComponent<SkeletonAttr>();
-        if (gameObject.tag.Contains("Dio")) attributes =(DioAttr) GetComponent<DioAttr>();
+        if (gameObject.tag.Contains("Skeleton")) attributes = GetComponent<SkeletonAttr>();
+        if (gameObject.tag.Contains("Dio")) attributes = GetComponent<DioAttr>();
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         rb.freezeRotation = true;
@@ -32,7 +32,7 @@ public class EnemyController : MonoBehaviour
         animator.SetFloat("velY", rb.velocity.y);
         initPos = rb.position;
         Move();
-        checkRaycast();
+        //checkRaycast();
         
     }
 
@@ -129,6 +129,7 @@ public class EnemyController : MonoBehaviour
     {
         if (collision.gameObject.tag == "groundable") GroundEnemy();
         if (collision.gameObject.tag == "hangable") Flip();
+        if (collision.gameObject.tag == "Player") StartCoroutine(Attack());
     }
 
     void Flip()
@@ -161,7 +162,7 @@ public class EnemyController : MonoBehaviour
         animator.SetBool("isDead", true);
         animator.SetBool("isDamaged", false);
         Player.instance.IncreaseEXP(attributes.expVal);
-        if(attributes.name == "slime")
+        if(attributes.name == "slime" || attributes.name == "skele")
         {
             attributes.PlayDead();
         }
