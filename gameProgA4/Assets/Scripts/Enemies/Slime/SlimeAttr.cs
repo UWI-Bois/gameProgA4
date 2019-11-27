@@ -15,6 +15,7 @@ public class SlimeAttr : EnemyAttr
         fallSpeed = 3;
         direction = -1;
         facingLeft = isGrounded = true;
+        name = "slime";
         //print(gameObject.tag.ToString());
     }
 

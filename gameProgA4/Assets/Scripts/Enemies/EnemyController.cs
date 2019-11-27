@@ -15,9 +15,11 @@ public class EnemyController : MonoBehaviour
     void Start()
     {
         if (gameObject.tag.Contains("Slime")) attributes =(SlimeAttr) GetComponent<SlimeAttr>();
+        if (gameObject.tag.Contains("Skeleton")) attributes =(SkeletonAttr) GetComponent<SkeletonAttr>();
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         rb.freezeRotation = true;
+        print("loaded: " + attributes.name);
     }
 
     // Update is called once per frame
