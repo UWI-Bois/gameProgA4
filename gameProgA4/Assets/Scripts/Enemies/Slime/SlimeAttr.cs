@@ -5,6 +5,7 @@ using UnityEngine;
 public class SlimeAttr : EnemyAttr
 {
     // Start is called before the first frame update
+    
     void Start()
     {
         hp = 3;
@@ -16,8 +17,16 @@ public class SlimeAttr : EnemyAttr
         direction = -1;
         facingLeft = isGrounded = true;
         name = "slime";
+
+        audioSource = GetComponent<AudioSource>();
+
+        //print(GetComponent<AudioSource>().name); // prints the name of the object (slime, slime1, slime2..)
+        //print(GetComponent<AudioSource>().clip.name); // prints the name of the audio file supplied
+
         //print(gameObject.tag.ToString());
     }
+
+    
 
 
 }

@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         TickTime();
-        enemies = GameObject.Find("Enemies").transform.childCount;
+        if(currentStage < maxStage) enemies = GameObject.Find("Enemies").transform.childCount;
     }
 
 

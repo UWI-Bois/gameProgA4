@@ -14,7 +14,7 @@ public class EnemyController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (gameObject.tag.Contains("Slime")) attributes =(SlimeAttr) GetComponent<SlimeAttr>();
+        if (gameObject.tag.Contains("Slime")) attributes = GetComponent<SlimeAttr>();
         if (gameObject.tag.Contains("Skeleton")) attributes =(SkeletonAttr) GetComponent<SkeletonAttr>();
         if (gameObject.tag.Contains("Dio")) attributes =(DioAttr) GetComponent<DioAttr>();
         rb = GetComponent<Rigidbody2D>();
@@ -31,7 +31,6 @@ public class EnemyController : MonoBehaviour
         animator.SetFloat("velX", Mathf.Abs(rb.velocity.x));
         animator.SetFloat("velY", rb.velocity.y);
         initPos = rb.position;
-        
         Move();
         checkRaycast();
         
@@ -162,6 +161,10 @@ public class EnemyController : MonoBehaviour
         animator.SetBool("isDead", true);
         animator.SetBool("isDamaged", false);
         Player.instance.IncreaseEXP(attributes.expVal);
+        if(attributes.name == "slime")
+        {
+            attributes.PlayDead();
+        }
         StartCoroutine(DestroyEnemy());
     }
 }

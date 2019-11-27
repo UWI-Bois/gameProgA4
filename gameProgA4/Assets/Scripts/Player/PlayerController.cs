@@ -205,7 +205,7 @@ public class PlayerController  : MonoBehaviour
             EnemyController enemy = rayDown.collider.GetComponent<EnemyController>();
             if (rayDown.collider.tag.Contains("Slime"))
             {
-                
+                enemy.attributes.PlayHit();
             }
             Jump();
             enemy.TakeDamage();
