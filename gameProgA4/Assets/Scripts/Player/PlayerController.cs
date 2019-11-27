@@ -206,6 +206,15 @@ public class PlayerController  : MonoBehaviour
             GroundPlayer();
         }
 
+        if (rayLeft.distance < 0.9f && rayLeft.collider.tag.Contains("hangable") && !!Player.instance.isGrounded)
+        {
+            //Hang();
+        }
+        if (rayRight.distance < 0.9f && rayRight.collider.tag.Contains("hangable") && !!Player.instance.isGrounded)
+        {
+            //Hang();
+        }
+
         //if(rayUp.distance < 0.9f && rayUp.collider.tag == "name")
 
     }

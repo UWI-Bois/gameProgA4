@@ -93,6 +93,7 @@ public class GameManager : MonoBehaviour
     {
         // remove points collected on the PlayerAttr.playerAttr.level so far
         Player.instance.score -= levelScore;
+        Player.instance.facingLeft = false;
         levelScore = 0;
         ResetTime();
         // reset PlayerAttr.playerAttr.level
