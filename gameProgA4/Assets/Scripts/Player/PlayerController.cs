@@ -120,10 +120,11 @@ public class PlayerController  : MonoBehaviour
         {
             EnemyController enemy = collision.gameObject.GetComponent<EnemyController>();
             if (collision.gameObject.tag.Contains("Slime"))
-            {
-                Player.instance.TakeDamage(enemy.attributes.damage);
-                if (Player.instance.health <= 0) GameManager.instance.KillPlayer();
+            { 
+
             }
+            Player.instance.TakeDamage(enemy.attributes.damage);
+            if (Player.instance.health <= 0) GameManager.instance.KillPlayer();
         }
         
     }
@@ -204,23 +205,15 @@ public class PlayerController  : MonoBehaviour
             EnemyController enemy = rayDown.collider.GetComponent<EnemyController>();
             if (rayDown.collider.tag.Contains("Slime"))
             {
-                Jump();
-                enemy.TakeDamage();
+                
             }
-            
+            Jump();
+            enemy.TakeDamage();
+
         }
         if (rayDown.distance <= bottDist && rayDown.collider.tag == "hangable") // walk on top of hangable terrain
         {
             GroundPlayer();
-        }
-
-        if (rayLeft.distance < 0.9f && rayLeft.collider.tag.Contains("hangable") && !!Player.instance.isGrounded)
-        {
-            //Hang();
-        }
-        if (rayRight.distance < 0.9f && rayRight.collider.tag.Contains("hangable") && !!Player.instance.isGrounded)
-        {
-            //Hang();
         }
 
         //if(rayUp.distance < 0.9f && rayUp.collider.tag == "name")

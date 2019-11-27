@@ -19,7 +19,7 @@ public class EnemyController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         rb.freezeRotation = true;
-        print("loaded: " + attributes.name);
+        //print("loaded: " + attributes.name);
     }
 
     // Update is called once per frame
@@ -86,6 +86,7 @@ public class EnemyController : MonoBehaviour
             rb.WakeUp();
             Jump();
         }
+        if (rb.velocity == Vector2.zero) Jump();
         //else if (rb.position == initPos) attributes.isStuck = true;
         //else if (rb.velocity.y != 0) attributes.isStuck = true;
         else attributes.isStuck = false;
@@ -156,7 +157,9 @@ public class EnemyController : MonoBehaviour
     void Die()
     {
         attributes.isDead = true;
+        attributes.isDamaged = false;
         animator.SetBool("isDead", true);
+        animator.SetBool("isDamaged", false);
         Player.instance.IncreaseEXP(attributes.expVal);
         StartCoroutine(DestroyEnemy());
     }
