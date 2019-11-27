@@ -248,8 +248,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 235853466}
-        m_MethodName: StartGame
+      - m_Target: {fileID: 235853468}
+        m_MethodName: ResetGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -465,6 +465,7 @@ GameObject:
   m_Component:
   - component: {fileID: 235853467}
   - component: {fileID: 235853466}
+  - component: {fileID: 235853468}
   m_Layer: 0
   m_Name: menuscript
   m_TagString: Untagged
@@ -498,6 +499,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &235853468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 235853465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c830e188df349f4caf6cdb9b12e2e7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerScoreValue: {fileID: 0}
+  highScoreValue: {fileID: 0}
+  winOrLose: {fileID: 0}
 --- !u!1 &454955905
 GameObject:
   m_ObjectHideFlags: 0

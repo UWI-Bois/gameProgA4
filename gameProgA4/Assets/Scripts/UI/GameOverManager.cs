@@ -15,8 +15,8 @@ public class GameOverManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // set the text property of the player score 
-        playerScoreValue.text = GameManager.instance.player.score.ToString();
+        // set the text property of the PlayerAttr.playerAttr score 
+        playerScoreValue.text = PlayerAttr.playerAttr.score.ToString();
         // set the text of high score
         highScoreValue.text = GameManager.instance.highScore.ToString();
         DetermineWin();

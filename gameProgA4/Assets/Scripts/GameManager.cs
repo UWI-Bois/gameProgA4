@@ -6,12 +6,12 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    //player.score of player
+    //PlayerAttr.playerAttr.score of PlayerAttr.playerAttr
     public bool win;
 
     private int coinVal, heartVal, musicNoteVal;
 
-    public int levelScore = 0; // player.score earned so far for the stage
+    public int levelScore = 0; // PlayerAttr.playerAttr.score earned so far for the stage
     public int highScore = 0;
     public int currentStage = 1;
     // amount of stages
@@ -21,7 +21,6 @@ public class GameManager : MonoBehaviour
     // static instance of GM to be accessed from anywhere
     public static GameManager instance;
     private HudManager hudManager;
-    public PlayerAttr player;
     private int slimeVal = 1;
 
     // Awake is called before the game starts 
@@ -35,7 +34,6 @@ public class GameManager : MonoBehaviour
         else if (instance != this)
         {
             instance.hudManager = FindObjectOfType<HudManager>();
-            instance.player = FindObjectOfType<PlayerAttr>();
             Destroy(gameObject);
         }
         //prevent this object from being destroyed when switching scenes
@@ -43,7 +41,6 @@ public class GameManager : MonoBehaviour
 
         // find HUD manager object
         hudManager = FindObjectOfType<HudManager>();
-        player = FindObjectOfType<PlayerAttr>();
 
     }
 
@@ -57,8 +54,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        initStats();
-        print(player.ToString());
+        initGame();
+        print(PlayerAttr.playerAttr.ToString());
     }
 
     private void Update()
@@ -75,17 +72,17 @@ public class GameManager : MonoBehaviour
 
     public void TakeDamage(int amt)
     {
-        player.health -= amt;
-        if (player.health <= 0) WaitDie();
+        PlayerAttr.playerAttr.health -= amt;
+        if (PlayerAttr.playerAttr.health <= 0) WaitDie();
     }
 
-    // increase player player.score
+    // increase PlayerAttr.playerAttr PlayerAttr.playerAttr.score
     public void EatCoin()
     {
-        player.score += coinVal;
+        PlayerAttr.playerAttr.score += coinVal;
         levelScore += coinVal;
         if (hudManager != null) hudManager.ResetHUD();
-        if (player.score > highScore) highScore = player.score;
+        if (PlayerAttr.playerAttr.score > highScore) highScore = PlayerAttr.playerAttr.score;
     }
 
     public void EatMusicNote()
@@ -106,43 +103,43 @@ public class GameManager : MonoBehaviour
 
     public bool isDamaged()
     {
-        if (player.health < player.maxHealth) return true;
+        if (PlayerAttr.playerAttr.health < PlayerAttr.playerAttr.maxHealth) return true;
         return false;
     }
 
     public void IncreaseEXP(int amt)
     {
-        player.exp += amt;
-        if (player.exp >= player.toNextLevel) LevelUp();
+        PlayerAttr.playerAttr.exp += amt;
+        if (PlayerAttr.playerAttr.exp >= PlayerAttr.playerAttr.toNextLevel) LevelUp();
         if (hudManager != null) hudManager.ResetHUD();
     }
     public void IncreaseHP(int amt)
     {
-        player.health += amt;
+        PlayerAttr.playerAttr.health += amt;
     }
 
     private void LevelUp()
     {
-        int diff = player.toNextLevel - player.exp;
-        player.level++;
-        if (player.level % 2 == 0) player.maxHealth++;
-        else if (player.level % 5 == 0)
+        int diff = PlayerAttr.playerAttr.toNextLevel - PlayerAttr.playerAttr.exp;
+        PlayerAttr.playerAttr.level++;
+        if (PlayerAttr.playerAttr.level % 2 == 0) PlayerAttr.playerAttr.maxHealth++;
+        else if (PlayerAttr.playerAttr.level % 5 == 0)
         {
-            player.maxHealth++; 
-            player.damage++;
+            PlayerAttr.playerAttr.maxHealth++; 
+            PlayerAttr.playerAttr.damage++;
         }
-        else player.damage++;
-        player.health = player.maxHealth;
-        player.exp += diff;
-        player.toNextLevel = player.toNextLevel + 10;
+        else PlayerAttr.playerAttr.damage++;
+        PlayerAttr.playerAttr.health = PlayerAttr.playerAttr.maxHealth;
+        PlayerAttr.playerAttr.exp += diff;
+        PlayerAttr.playerAttr.toNextLevel = PlayerAttr.playerAttr.toNextLevel + 10;
         if (hudManager != null) hudManager.ResetHUD();
         // probably add an effect here? sound
     }
 
-    void initStats()
+    void initGame()
     {
         currentStage = 1;
-        player.ResetStats();
+        PlayerAttr.playerAttr.ResetStats();
         timePerStage = 120f;
         coinVal = 10;
         win = false;
@@ -150,27 +147,27 @@ public class GameManager : MonoBehaviour
         heartVal = 1;
         timeLeft = timePerStage;
         timeElapsed = 0f;
-        // reset player.score
+        // reset PlayerAttr.playerAttr.score
         levelScore = 0;
     }
 
     public void ResetGame()
     {
-        initStats();
-        player.ResetStats();
-        // go back to player.level 1
+        initGame();
+        PlayerAttr.playerAttr.ResetStats();
+        // go back to PlayerAttr.playerAttr.level 1
         if (hudManager != null) hudManager.ResetHUD();
-        // load player.level 1 scene
+        // load PlayerAttr.playerAttr.level 1 scene
         SceneManager.LoadScene("Stage1");
     }
 
     public void ResetLevel()
     {
-        // remove points collected on the player.level so far
-        player.score -= levelScore;
+        // remove points collected on the PlayerAttr.playerAttr.level so far
+        PlayerAttr.playerAttr.score -= levelScore;
         levelScore = 0;
         ResetTime();
-        // reset player.level
+        // reset PlayerAttr.playerAttr.level
         if (hudManager != null) hudManager.ResetHUD();
         // load stage scene
         SceneManager.LoadScene("Stage" + currentStage);
@@ -184,8 +181,8 @@ public class GameManager : MonoBehaviour
 
     public void Die()
     {
-        player.lives--;
-        if (player.lives <= 0) GameOver();
+        PlayerAttr.playerAttr.lives--;
+        if (PlayerAttr.playerAttr.lives <= 0) GameOver();
         else ResetLevel();
     }
 
@@ -195,11 +192,11 @@ public class GameManager : MonoBehaviour
         if (currentStage < maxStage)
         {
             currentStage++;
-            player.lives++;
-            player.health = player.maxHealth;
+            PlayerAttr.playerAttr.lives++;
+            PlayerAttr.playerAttr.health = PlayerAttr.playerAttr.maxHealth;
             levelScore = 0;
-            player.score += (int)timeLeft * 10;
-            DataManagement.dataManagement.highScore = player.score;
+            PlayerAttr.playerAttr.score += (int)timeLeft * 10;
+            DataManagement.dataManagement.highScore = PlayerAttr.playerAttr.score;
             DataManagement.dataManagement.SaveData();
             try
             {
