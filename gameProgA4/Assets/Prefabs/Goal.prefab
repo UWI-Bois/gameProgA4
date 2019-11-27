@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2411444991095645805}
   - component: {fileID: 2411444991095645801}
   - component: {fileID: 2411444991095645806}
+  - component: {fileID: 1489361081022978274}
   m_Layer: 0
   m_Name: Goal
   m_TagString: Drop_Goal
@@ -149,3 +150,15 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &1489361081022978274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2411444991095645794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb556bbe8975edd4bae29dc952bac5fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
