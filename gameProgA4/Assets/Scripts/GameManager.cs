@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
     private HudManager hudManager;
     private int slimeVal = 1;
 
-    // Awake is called before the game starts
+    // Awake is called before the game starts dawd 
     void Awake()
     {
         maxStage = 1;
