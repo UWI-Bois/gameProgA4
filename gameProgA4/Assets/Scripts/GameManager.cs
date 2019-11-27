@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     public int highScore = 0;
     public int currentStage = 1;
     // amount of stages
-    public int maxStage = 1;
+    public int maxStage = 2;
     //timer stuff
     public float timeLeft, timeElapsed, timePerStage;
     // static instance of GM to be accessed from anywhere
@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
     // Awake is called before the game starts dawd 
     void Awake()
     {
-        maxStage = 1;
+        maxStage = 2;
         currentStage = 1;
         // check that it exists
         if (instance == null) instance = this;
