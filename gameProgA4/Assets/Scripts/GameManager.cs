@@ -27,9 +27,10 @@ public class GameManager : MonoBehaviour
     // static instance of GM to be accessed from anywhere
     public static GameManager instance;
     private HudManager hudManager;
+    public PlayerAttr player;
     private int slimeVal = 1;
 
-    // Awake is called before the game starts dawd 
+    // Awake is called before the game starts 
     void Awake()
     {
         maxStage = 2;
@@ -40,13 +41,16 @@ public class GameManager : MonoBehaviour
         else if (instance != this)
         {
             instance.hudManager = FindObjectOfType<HudManager>();
+            instance.player = GetComponent<PlayerAttr>();
             Destroy(gameObject);
         }
         //prevent this object from being destroyed when switching scenes
         DontDestroyOnLoad(gameObject);
 
-        // find hud manager object
+        // find HUD manager object
         hudManager = FindObjectOfType<HudManager>();
+        player = GetComponent<PlayerAttr>();
+
     }
 
     public IEnumerator WaitDie()
@@ -59,6 +63,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        player.ResetStats();
+        print(player.ToString());
         initStats();
     }
 
@@ -118,8 +124,8 @@ public class GameManager : MonoBehaviour
 
     public void IncreaseEXP(int amt)
     {
-        exp += amt;
-        if (exp >= toNextLevel) LevelUp();
+        player.exp += amt;
+        if (player.exp >= toNextLevel) LevelUp();
         if (hudManager != null) hudManager.ResetHUD();
     }
     public void IncreaseHP(int amt)
@@ -129,7 +135,7 @@ public class GameManager : MonoBehaviour
 
     private void LevelUp()
     {
-        int diff = toNextLevel - exp;
+        int diff = toNextLevel - player.exp;
         level++;
         if (level % 2 == 0) maxHealth++;
         else if (level % 5 == 0)
@@ -139,7 +145,7 @@ public class GameManager : MonoBehaviour
         }
         else damage++;
         health = maxHealth;
-        exp += diff;
+        player.exp += diff;
         toNextLevel = toNextLevel + 10;
         if (hudManager != null) hudManager.ResetHUD();
         // probably add an effect here? sound
@@ -169,6 +175,7 @@ public class GameManager : MonoBehaviour
     public void ResetGame()
     {
         initStats();
+        player.ResetStats();
         // go back to level 1
         if (hudManager != null) hudManager.ResetHUD();
         // load level 1 scene

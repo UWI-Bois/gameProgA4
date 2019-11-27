@@ -4,10 +4,18 @@ using UnityEngine;
 
 public class PlayerAttr : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public int health, maxHealth, exp;
+
+    public void ResetStats()
     {
-        
+        health = maxHealth = 4;
+        exp = 0;
+    }
+    
+    override public string ToString()
+    {
+        return "hp: " + health
+            + "\nexp: " + exp;
     }
 
 }

@@ -24,7 +24,7 @@ public class HudManager : MonoBehaviour
         healthLabel.text = "HP: " + GameManager.instance.health;
         levelLabel.text = "LVL: " + GameManager.instance.level;
         damageLabel.text = "DMG: " + GameManager.instance.damage;
-        expLabel.text = "EXP: " + GameManager.instance.exp + "/" + GameManager.instance.toNextLevel;
+        expLabel.text = "EXP: " + GameManager.instance.player.exp+ "/" + GameManager.instance.toNextLevel;
         livesLabel.text = "Lives: " + GameManager.instance.playerLives;
     }
 }
