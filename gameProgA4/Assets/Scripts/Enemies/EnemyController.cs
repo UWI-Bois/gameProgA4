@@ -140,7 +140,7 @@ public class EnemyController : MonoBehaviour
 
     public void TakeDamage()
     {
-        attributes.hp -= GameManager.instance.damage;
+        attributes.hp -= GameManager.instance.player.damage;
         attributes.isDamaged = true;
         animator.SetBool("isDamaged", attributes.isDamaged);
         if (attributes.hp <= 0) Die();
