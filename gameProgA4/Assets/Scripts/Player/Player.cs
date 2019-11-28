@@ -40,6 +40,7 @@ public class Player : MonoBehaviour
     public void TakeDamage(int amt)
     {
         health -= amt;
+        AudioManager.instance.PlayOof();
     }
     public void EatCoin()
     {
@@ -79,6 +80,7 @@ public class Player : MonoBehaviour
     }
     private void LevelUp()
     {
+        AudioManager.instance.PlayLevelUp();
         int diff = toNextLevel - exp;
         level++;
         if (level % 2 == 0) maxHealth++;

@@ -6,6 +6,7 @@ public class AudioManager : MonoBehaviour
 {
     public AudioSource audioSource;
     public AudioClip leaves, heart, coin, music, bgm, girono, jojo, chest, goal;
+    public AudioClip ora, oof, levelup;
 
     public static AudioManager instance;
 
@@ -26,23 +27,35 @@ public class AudioManager : MonoBehaviour
     {
         if (leaves != null)
         {
-            audioSource.loop = false;
             audioSource.PlayOneShot(leaves);
         }
     }
+    public void PlayLevelUp()
+    {
+        if (levelup != null) audioSource.PlayOneShot(levelup);
+    }
+    public void PlayGoal()
+    {
+        if (goal != null) audioSource.PlayOneShot(goal);
+    }
     public void PlayHeart()
     {
-        audioSource.loop = false;
         if (heart != null) audioSource.PlayOneShot(heart);
+    }
+    public void PlayOof()
+    {
+        if (oof != null) audioSource.PlayOneShot(oof);
+    }
+    public void PlayOra()
+    {
+        if (ora != null) audioSource.PlayOneShot(ora);
     }
     public void PlayCoin()
     {
-        audioSource.loop = false;
         if (coin != null) audioSource.PlayOneShot(coin);
     }
     public void PlayMusic()
     {
-        audioSource.loop = false;
         if (music != null) audioSource.PlayOneShot(music);
     }
     public void PlayBGM()

@@ -54,6 +54,9 @@ MonoBehaviour:
   jojo: {fileID: 8300000, guid: 75aaf564af3c6a64ea93c1ddb08bf80e, type: 3}
   chest: {fileID: 8300000, guid: c33c135919f8cdd46b8f0ba08c7bcbfc, type: 3}
   goal: {fileID: 8300000, guid: 4637785e4b1173c4d94e573cb06fd4e6, type: 3}
+  ora: {fileID: 8300000, guid: 22a4fa80bbc7ec54b8f26c7a331f52b6, type: 3}
+  oof: {fileID: 8300000, guid: c8f3e9e8843e98a4d8a5a1441945584b, type: 3}
+  levelup: {fileID: 8300000, guid: 130a4db150490484b8c91b7743b83758, type: 3}
 --- !u!82 &7778253735415462409
 AudioSource:
   m_ObjectHideFlags: 0

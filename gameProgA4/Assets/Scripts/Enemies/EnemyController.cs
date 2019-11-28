@@ -155,6 +155,7 @@ public class EnemyController : MonoBehaviour
     public IEnumerator DestroyEnemy()
     {
         yield return new WaitForSeconds(2);
+        attributes.PlayDead();
         Player.instance.IncreaseEXP(attributes.expVal);
         Destroy(gameObject);
     }
@@ -165,7 +166,7 @@ public class EnemyController : MonoBehaviour
         attributes.isDamaged = false;
         animator.SetBool("isDead", true);
         animator.SetBool("isDamaged", false);
-        attributes.PlayDead();
+        AudioManager.instance.PlayOra();
         StartCoroutine(DestroyEnemy());
     }
 }

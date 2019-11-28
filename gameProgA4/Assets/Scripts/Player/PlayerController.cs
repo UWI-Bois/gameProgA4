@@ -208,7 +208,7 @@ public class PlayerController  : MonoBehaviour
         }
         if (collision.tag.Contains("Goal"))
         {
-            //play sound
+            AudioManager.instance.PlayGoal();
             if(GameManager.instance.enemies == 0)
             {
                 Destroy(collision.gameObject);

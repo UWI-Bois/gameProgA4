@@ -118,14 +118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52d582d6c02c0b24c81b044bbdcb8240, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpForce: 300
-  speed: 10
-  maxSpeed: 10
-  facingLeft: 0
-  hasDied: 0
-  isGrounded: 1
-  isHanging: 0
-  canJump: 0
+  yDead: -10
   animator: {fileID: 5382543781212641620}
   bottDist: 0
   coinSound: {fileID: 0}
