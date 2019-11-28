@@ -26,6 +26,7 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (attributes.canRage && attributes.hp < (attributes.hp / 2)) attributes.Enrage();
         CheckY();
         if (attributes.isDead) return; // if dead, dont check or move
         animator.SetFloat("velX", Mathf.Abs(rb.velocity.x));
@@ -86,7 +87,7 @@ public class EnemyController : MonoBehaviour
             rb.WakeUp();
             Jump();
         }
-        if (rb.velocity == Vector2.zero) Jump();
+        else if (rb.velocity == Vector2.zero) Jump();
         //else if (rb.position == initPos) attributes.isStuck = true;
         //else if (rb.velocity.y != 0) attributes.isStuck = true;
         else attributes.isStuck = false;
@@ -146,6 +147,7 @@ public class EnemyController : MonoBehaviour
         attributes.hp -= Player.instance.damage;
         attributes.isDamaged = true;
         animator.SetBool("isDamaged", attributes.isDamaged);
+        if (attributes.hp > 0) attributes.PlayHit();
         if (attributes.hp <= 0) Die();
     }
 
@@ -162,10 +164,7 @@ public class EnemyController : MonoBehaviour
         animator.SetBool("isDead", true);
         animator.SetBool("isDamaged", false);
         Player.instance.IncreaseEXP(attributes.expVal);
-        if(attributes.name == "slime" || attributes.name == "skele")
-        {
-            attributes.PlayDead();
-        }
+        attributes.PlayDead();
         StartCoroutine(DestroyEnemy());
     }
 }

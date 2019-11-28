@@ -15,7 +15,7 @@ public class SkeletonAttr : EnemyAttr
         fallSpeed = 3;
         direction = 1;
         facingLeft = false; 
-        isGrounded = true;
+        isGrounded = canRage = true;
         name = "skele";
 
         audioSource = GetComponent<AudioSource>();

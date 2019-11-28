@@ -194,12 +194,14 @@ MonoBehaviour:
   isGrounded: 0
   isDamaged: 0
   isDead: 0
+  canRage: 0
   direction: 0
   hitDist: 0.6
   name: 
   audioSource: {fileID: 0}
   hit: {fileID: 8300000, guid: 0d11c66f3d1582d4eb3961462a0cb807, type: 3}
   dead: {fileID: 8300000, guid: 4e98940e1976e9041b625795fe0fe3d1, type: 3}
+  enrage: {fileID: 8300000, guid: 5010a68690d103d4c83671a0a9170551, type: 3}
 --- !u!82 &3479958467673798018
 AudioSource:
   m_ObjectHideFlags: 0

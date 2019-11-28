@@ -203,9 +203,9 @@ public class PlayerController  : MonoBehaviour
         if (rayDown.distance < 0.9f && rayDown.collider.tag.Contains("Enemy")) // kill enemy, hit enemy
         {
             EnemyController enemy = rayDown.collider.GetComponent<EnemyController>();
-            if (rayDown.collider.tag.Contains("Slime") || rayDown.collider.tag.Contains("Skeleton"))
+            if (rayDown.collider.tag.Contains("Slime") || rayDown.collider.tag.Contains("Skeleton") || rayDown.collider.tag.Contains("Dio"))
             {
-                enemy.attributes.PlayHit();
+                //enemy.attributes.PlayHit();
             }
             Jump();
             enemy.TakeDamage();

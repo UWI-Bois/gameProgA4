@@ -15,8 +15,10 @@ public class DioAttr : EnemyAttr
         fallSpeed = 3;
         direction = 1;
         facingLeft = false; 
-        isGrounded = true;
+        isGrounded = canRage = true;
         name = "dio";
+
+        audioSource = GetComponent<AudioSource>();
         //print(gameObject.tag.ToString());
     }
 
