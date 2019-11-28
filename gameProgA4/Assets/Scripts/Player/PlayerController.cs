@@ -174,7 +174,7 @@ public class PlayerController  : MonoBehaviour
         if (collision.gameObject.tag.Contains("Chest"))
         {
             ChestController cc = collision.gameObject.GetComponent<ChestController>();
-            cc.Open();
+            if(cc.isClosed) cc.Open();
         }
         
     }

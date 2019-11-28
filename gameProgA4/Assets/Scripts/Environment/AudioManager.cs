@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
-    public AudioSource audioSource;
+    private AudioSource audioSource;
     public AudioClip leaves, heart, coin, music, bgm, girono, jojo, chest, goal;
     public AudioClip ora, oof, levelup;
 
@@ -13,16 +13,19 @@ public class AudioManager : MonoBehaviour
     private void Awake()
     {
         if (instance == null) instance = this;
-        else if (instance != this) Destroy(gameObject);
+        else if (instance != this)
+        {
+            //instance.audioSource = GetComponent<AudioSource>();
+            Destroy(gameObject);
+        }
         DontDestroyOnLoad(gameObject);
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        //leaves = heartSound = coinSound = musicSound = bgm = girono = null;
-        audioSource = GetComponent<AudioSource>();
+        //audioSource = GetComponent<AudioSource>();
     }
 
+    private void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
     public void PlayLeaves()
     {
         if (leaves != null)

@@ -129,7 +129,7 @@ public class EnemyController : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "groundable") GroundEnemy();
-        if (collision.gameObject.tag == "hangable") Flip();
+        if (collision.gameObject.tag == "hangable" || collision.gameObject.tag.Contains("breakable")) Flip();
         if (collision.gameObject.tag.Contains("Enemy")) Flip();
         if (collision.gameObject.tag == "Player") StartCoroutine(Attack());
     }
