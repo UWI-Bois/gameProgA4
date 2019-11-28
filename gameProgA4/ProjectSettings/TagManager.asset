@@ -15,6 +15,7 @@ TagManager:
   - Enemy_Dio
   - breakable
   - Chest_Wood
+  - Chest_Iron
   layers:
   - Default
   - TransparentFX

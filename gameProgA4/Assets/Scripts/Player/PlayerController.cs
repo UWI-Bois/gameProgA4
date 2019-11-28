@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI; // access ui elements
-using UnityEngine.InputSystem;
 
 public class PlayerController  : MonoBehaviour
 {
@@ -173,6 +168,7 @@ public class PlayerController  : MonoBehaviour
 
         if (collision.gameObject.tag.Contains("Chest"))
         {
+            print("collided with chest");
             ChestController cc = collision.gameObject.GetComponent<ChestController>();
             if(cc.isClosed) cc.Open();
         }
@@ -271,7 +267,9 @@ public class PlayerController  : MonoBehaviour
         }
         if (rayDown.distance <= bottDist && rayDown.collider.tag == "breakable") // break leaves
         {
+            GroundPlayer();
             StartCoroutine(DestroyLeaves(rayDown.collider.gameObject));
+            AudioManager.instance.playedShot = false;
         }
         //CheckChest(rayLeft, rayRight);
     }
@@ -301,6 +299,7 @@ public class PlayerController  : MonoBehaviour
 
     private IEnumerator DestroyLeaves(GameObject go)
     {
+
         yield return new WaitForSeconds(2);
         AudioManager.instance.PlayLeaves();
         Destroy(go);

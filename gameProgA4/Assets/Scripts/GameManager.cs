@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         TickTime();
-        if(currentStage < maxStage) enemies = GameObject.Find("Enemies").transform.childCount; // ENABLE THIS
+        if (currentStage < maxStage && !SceneManager.GetActiveScene().name.Equals("GameOver")) enemies = GameObject.Find("Enemies").transform.childCount; // ENABLE THIS
     }
 
 

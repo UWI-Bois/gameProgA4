@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
-    private AudioSource audioSource;
+    public AudioSource audioSource;
     public AudioClip leaves, heart, coin, music, bgm, girono, jojo, chest, goal;
     public AudioClip ora, oof, levelup;
+    public bool playedShot;
 
     public static AudioManager instance;
 
@@ -15,23 +16,35 @@ public class AudioManager : MonoBehaviour
         if (instance == null) instance = this;
         else if (instance != this)
         {
-            //instance.audioSource = GetComponent<AudioSource>();
+            instance.audioSource = GetComponent<AudioSource>();
             Destroy(gameObject);
         }
         DontDestroyOnLoad(gameObject);
-        //audioSource = GetComponent<AudioSource>();
+
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
     {
-        audioSource = GetComponent<AudioSource>();
+        playedShot = false;
+        if(audioSource == null)
+            audioSource = GetComponent<AudioSource>();
+    }
+
+    private void Update()
+    {
+        //if (playedShot) playedShot = false;
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
     }
     public void PlayLeaves()
     {
-        if (leaves != null)
+        if (leaves != null && !playedShot)
         {
             audioSource.PlayOneShot(leaves);
         }
+        playedShot = true;
     }
     public void PlayChest()
     {

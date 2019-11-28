@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 7778253735415462409}
-  leaves: {fileID: 8300000, guid: 366eef607d7b8914b81aa1efd116473f, type: 3}
+  leaves: {fileID: 8300000, guid: dbd916c56db04f44e823abaf551b11b8, type: 3}
   heart: {fileID: 8300000, guid: 4034544e59536b54ab58b92115cc1597, type: 3}
   coin: {fileID: 8300000, guid: 391e31a27dfaf024eae81b57e7ffe2a8, type: 3}
   music: {fileID: 8300000, guid: 17a1233641f7ff6469088860384d2201, type: 3}
