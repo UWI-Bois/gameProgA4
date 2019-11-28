@@ -4,13 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Coin
-  - Enemy
-  - Goal
   - groundable
   - hangable
-  - EnemySlime
-  - heart
   - Drop_Heart
   - Drop_Coin
   - Drop_Goal
@@ -18,6 +13,7 @@ TagManager:
   - Enemy_Skeleton
   - Enemy_Slime
   - Enemy_Dio
+  - breakable
   layers:
   - Default
   - TransparentFX

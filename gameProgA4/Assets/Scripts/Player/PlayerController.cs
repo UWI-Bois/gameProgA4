@@ -4,9 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI; // access ui elements
+using UnityEngine.InputSystem;
 
 public class PlayerController  : MonoBehaviour
 {
+    public PlayerControls controls; // joy con support
+
     public int yDead = -10;
     private float moveX;
     private Rigidbody2D rb;
@@ -18,6 +21,14 @@ public class PlayerController  : MonoBehaviour
 
     public AudioSource coinSound;
 
+    private void Awake()
+    {
+        controls = new PlayerControls();
+        controls.Gameplay.Jump.performed += context => Jump();
+        //controls.Gameplay.Move.performed += context => size = context.ReadValue<Vector2>();
+        //controls.Gameplay.Move.canceled += context => rb.velocity = Vector2.zero;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,9 +39,21 @@ public class PlayerController  : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        //Vector2 m = new Vector2(size.x, size.y) * Time.deltaTime;
+        //transform.Translate(m, Space.World);
         Move(); // move the player
         CheckY(); // check to see if you fell off the map
         PlayerRaycast(); // used to kill enemies
+    }
+
+    private void OnEnable()
+    {
+        controls.Gameplay.Enable();
+    }
+
+    private void OnDisable()
+    {
+        controls.Gameplay.Disable();
     }
 
     void initController()
@@ -56,6 +79,19 @@ public class PlayerController  : MonoBehaviour
         animator.SetBool("hasDied", Player.instance.hasDied);
     }
 
+    void MoveJoyCon()
+    {
+        // animations
+        // player direction
+        if (moveX < 0.0f && !Player.instance.facingLeft) FlipPlayer();
+        else if (moveX > 0.0f && Player.instance.facingLeft) FlipPlayer();
+        // physics
+        rb.velocity = new Vector2(
+            moveX * Player.instance.speed,
+            rb.velocity.y
+        );
+    }
+
     void Move()
     {
         // controls
@@ -67,29 +103,7 @@ public class PlayerController  : MonoBehaviour
 
         if (Input.GetButtonDown("Jump"))
         {
-            if(Player.instance.isGrounded || Player.instance.canJump || rb.velocity.y == 0 || Player.instance.isHanging) Jump();
-        }
-        // animations
-        // player direction
-        if (moveX < 0.0f && !Player.instance.facingLeft) FlipPlayer();
-        else if (moveX > 0.0f && Player.instance.facingLeft) FlipPlayer();
-        // physics
-        rb.velocity = new Vector2(
-            moveX * Player.instance.speed,
-            rb.velocity.y
-        );
-    }
-    void MoveJoypad()
-    {
-        // controls
-        moveX = Input.GetAxis("Horizontal");
-        animator.SetFloat("XSpeed", Mathf.Abs(rb.velocity.x));
-        animator.SetFloat("YSpeed", rb.velocity.y);
-        //if (Input.GetButtonDown("Horizontal")) ; // cool code to check button
-
-        if (Input.GetButtonDown("Jump"))
-        {
-            if(Player.instance.isGrounded || Player.instance.canJump) Jump();
+             Jump();
         }
         // animations
         // player direction
@@ -121,7 +135,14 @@ public class PlayerController  : MonoBehaviour
 
     void Jump()
     {
-        //Player.instance.speed = Player.instance.maxSpeed;
+        if (Player.instance.isGrounded || Player.instance.canJump || rb.velocity.y == 0 || Player.instance.isHanging)
+        {
+            Bounce();
+        }    
+    }
+
+    void Bounce()
+    {
         rb.gravityScale = 1;
         rb.AddForce(Vector2.up * Player.instance.jumpForce);
         Player.instance.isGrounded = false;
@@ -137,6 +158,7 @@ public class PlayerController  : MonoBehaviour
         //Debug.Log("player has collided with " + collision.collider.name + " with tag: " + collision.gameObject.tag);
         if (collision.gameObject.tag == "groundable") GroundPlayer();
         if (collision.gameObject.tag == "hangable" && !Player.instance.isGrounded) Hang();
+        if (collision.gameObject.tag == "breakable" && !Player.instance.isGrounded) Hang();
       
         // this part isnt necessary since its easier to handle this collision as one collision within the enemycontroller
         if(collision.gameObject.tag.Contains("Enemy"))
@@ -168,19 +190,19 @@ public class PlayerController  : MonoBehaviour
     {
         if (collision.tag.Contains("Coin"))
         {
-            //play sound
+            AudioManager.instance.PlayCoin();
             Player.instance.EatCoin();
             Destroy(collision.gameObject);
         }
         if (collision.tag.Contains("Music"))
         {
-            //play sound
+            AudioManager.instance.PlayMusic();
             Player.instance.EatMusic();
             Destroy(collision.gameObject);
         }
         if (collision.tag.Contains("Heart"))
         {
-            //play sound
+            AudioManager.instance.PlayHeart();
             Player.instance.EatHeart();
             Destroy(collision.gameObject);
         }
@@ -230,7 +252,7 @@ public class PlayerController  : MonoBehaviour
             {
                 //enemy.attributes.PlayHit();
             }
-            Jump();
+            Bounce();
             enemy.TakeDamage();
 
         }
@@ -238,9 +260,19 @@ public class PlayerController  : MonoBehaviour
         {
             GroundPlayer();
         }
+        if (rayDown.distance <= bottDist && rayDown.collider.tag == "breakable") // break leaves
+        {
+            StartCoroutine(DestroyLeaves(rayDown.collider.gameObject));
+        }
 
         //if(rayUp.distance < 0.9f && rayUp.collider.tag == "name")
 
     }
 
+    private IEnumerator DestroyLeaves(GameObject go)
+    {
+        yield return new WaitForSeconds(2);
+        AudioManager.instance.PlayLeaves();
+        Destroy(go);
+    }
 }

@@ -7,7 +7,7 @@ public class SkeletonAttr : EnemyAttr
     // Start is called before the first frame update
     void Start()
     {
-        hp = 5;
+        hp = 10;
         damage = 2;
         speed = maxSpeed = 2;
         expVal = scoreVal = 5;

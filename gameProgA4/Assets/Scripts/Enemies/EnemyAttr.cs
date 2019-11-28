@@ -24,15 +24,28 @@ public class EnemyAttr : MonoBehaviour
     }
     public void PlayHit()
     {
-        if (hit != null) audioSource.PlayOneShot(hit);
+        if (hit != null)
+        {
+            if (audioSource.clip == hit) return;
+            audioSource.PlayOneShot(hit);
+        }
+        
     }
     public void PlayDead()
     {
-        if (dead != null) audioSource.PlayOneShot(dead);
+        if (dead != null)
+        {
+            if (audioSource.clip == dead) return;
+            audioSource.PlayOneShot(dead);
+        }
     }
     public void PlayEnrage()
     {
-        if (enrage != null) audioSource.PlayOneShot(enrage);
+        if (enrage != null)
+        {
+            if (audioSource.clip == enrage) return;
+            audioSource.PlayOneShot(enrage);
+        }
     }
 
     public void Enrage()

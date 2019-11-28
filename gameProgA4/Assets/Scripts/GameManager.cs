@@ -20,19 +20,21 @@ public class GameManager : MonoBehaviour
     // static instance of GM to be accessed from anywhere
     public static GameManager instance;
     private HudManager hudManager;
-    
 
     // Awake is called before the game starts 
     void Awake()
     {
         maxStage = 3;
         currentStage = 1;
+        
         // check that it exists
         if (instance == null) instance = this;
         // check that it is equal to the current object
         else if (instance != this)
         {
             instance.hudManager = FindObjectOfType<HudManager>();
+            instance.enemies = GameObject.Find("Enemies").transform.childCount;
+            instance.enemies = 0; // REMOVE THIS
             Destroy(gameObject);
         }
         //prevent this object from being destroyed when switching scenes
@@ -41,6 +43,7 @@ public class GameManager : MonoBehaviour
         // find HUD manager object
         hudManager = FindObjectOfType<HudManager>();
         enemies = GameObject.Find("Enemies").transform.childCount;
+        enemies = 0; // REMOVE THIS
         //print("enemies: " + enemies);
     }
     private void Start()
@@ -51,7 +54,7 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         TickTime();
-        if(currentStage < maxStage) enemies = GameObject.Find("Enemies").transform.childCount;
+        //if(currentStage < maxStage) enemies = GameObject.Find("Enemies").transform.childCount; // ENABLE THIS
     }
 
 
@@ -69,30 +72,31 @@ public class GameManager : MonoBehaviour
         timePerStage = 120f;
         coinVal = 10;
         win = false;
-        timeLeft = timePerStage;
-        timeElapsed = levelScore= 0;
+        initStage();
     }
 
-    public void ResetGame()
+    void initStage()
     {
-        initGame();
-        // go back to PlayerAttr.playerAttr.level 1
-        if (hudManager != null) hudManager.ResetHUD();
-        // load PlayerAttr.playerAttr.level 1 scene
-        SceneManager.LoadScene("Stage1");
-    }
-
-    public void ResetLevel()
-    {
-        // remove points collected on the PlayerAttr.playerAttr.level so far
+        if (currentStage == maxStage) AudioManager.instance.PlayGiorno();
+        else AudioManager.instance.PlayBGM();
         Player.instance.score -= levelScore;
         Player.instance.facingLeft = false;
         Player.instance.health = Player.instance.maxHealth;
         levelScore = 0;
         ResetTime();
-        // reset PlayerAttr.playerAttr.level
+    }
+
+    public void ResetGame()
+    {
+        initGame();
         if (hudManager != null) hudManager.ResetHUD();
-        // load stage scene
+        SceneManager.LoadScene("Stage1");
+    }
+
+    public void ResetStage()
+    {
+        initStage();
+        if (hudManager != null) hudManager.ResetHUD();
         SceneManager.LoadScene("Stage" + currentStage);
     }
 
@@ -106,7 +110,7 @@ public class GameManager : MonoBehaviour
     {
         Player.instance.lives--;
         if (Player.instance.lives <= 0) GameOver();
-        else ResetLevel();
+        else ResetStage();
     }
 
     public void LoadNextStage()
@@ -116,12 +120,10 @@ public class GameManager : MonoBehaviour
         {
             currentStage++;
             Player.instance.lives++;
-            Player.instance.health = Player.instance.maxHealth;
-            Player.instance.facingLeft = false;
-            levelScore = 0;
             Player.instance.score += (int)timeLeft * 10;
             DataManagement.dataManagement.highScore = Player.instance.score;
             DataManagement.dataManagement.SaveData();
+            initStage();
             try
             {
                 SceneManager.LoadScene("Stage" + currentStage);
@@ -143,5 +145,6 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene("GameOver");
     }
+
 
 }

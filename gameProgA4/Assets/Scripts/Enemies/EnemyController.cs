@@ -130,6 +130,7 @@ public class EnemyController : MonoBehaviour
     {
         if (collision.gameObject.tag == "groundable") GroundEnemy();
         if (collision.gameObject.tag == "hangable") Flip();
+        if (collision.gameObject.tag.Contains("Enemy")) Flip();
         if (collision.gameObject.tag == "Player") StartCoroutine(Attack());
     }
 
@@ -154,6 +155,7 @@ public class EnemyController : MonoBehaviour
     public IEnumerator DestroyEnemy()
     {
         yield return new WaitForSeconds(2);
+        Player.instance.IncreaseEXP(attributes.expVal);
         Destroy(gameObject);
     }
 
@@ -163,7 +165,6 @@ public class EnemyController : MonoBehaviour
         attributes.isDamaged = false;
         animator.SetBool("isDead", true);
         animator.SetBool("isDamaged", false);
-        Player.instance.IncreaseEXP(attributes.expVal);
         attributes.PlayDead();
         StartCoroutine(DestroyEnemy());
     }
