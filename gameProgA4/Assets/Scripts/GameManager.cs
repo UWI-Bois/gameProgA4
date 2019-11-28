@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
         {
             instance.hudManager = FindObjectOfType<HudManager>();
             instance.enemies = GameObject.Find("Enemies").transform.childCount;
-            instance.enemies = 0; // REMOVE THIS
+            //instance.enemies = 0; // REMOVE THIS
             Destroy(gameObject);
         }
         //prevent this object from being destroyed when switching scenes
@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour
         // find HUD manager object
         hudManager = FindObjectOfType<HudManager>();
         enemies = GameObject.Find("Enemies").transform.childCount;
-        enemies = 0; // REMOVE THIS
+        //enemies = 0; // REMOVE THIS
         //print("enemies: " + enemies);
     }
     private void Start()
@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         TickTime();
-        //if(currentStage < maxStage) enemies = GameObject.Find("Enemies").transform.childCount; // ENABLE THIS
+        if(currentStage < maxStage) enemies = GameObject.Find("Enemies").transform.childCount; // ENABLE THIS
     }
 
 

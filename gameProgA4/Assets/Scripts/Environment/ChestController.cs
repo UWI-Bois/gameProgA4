@@ -25,7 +25,9 @@ public class ChestController : MonoBehaviour
         isClosed = false;
         animator.SetBool("isClosed", isClosed);
         AudioManager.instance.PlayChest();
-        this.enabled = false;
+        if (score) Player.instance.score += 10;
+        if (hp) Player.instance.health += 10;
+        if (exp) Player.instance.exp += 10;
     }
     
 

@@ -160,7 +160,6 @@ public class PlayerController  : MonoBehaviour
         if (collision.gameObject.tag == "hangable" && !Player.instance.isGrounded) Hang();
         if (collision.gameObject.tag == "breakable" && !Player.instance.isGrounded) Hang();
       
-        // this part isnt necessary since its easier to handle this collision as one collision within the enemycontroller
         if(collision.gameObject.tag.Contains("Enemy"))
         {
             EnemyController enemy = collision.gameObject.GetComponent<EnemyController>();
@@ -170,6 +169,12 @@ public class PlayerController  : MonoBehaviour
             }
             Player.instance.TakeDamage(enemy.attributes.damage);
             if (Player.instance.health <= 0) GameManager.instance.KillPlayer();
+        }
+
+        if (collision.gameObject.tag.Contains("Chest"))
+        {
+            ChestController cc = collision.gameObject.GetComponent<ChestController>();
+            cc.Open();
         }
         
     }
@@ -260,16 +265,15 @@ public class PlayerController  : MonoBehaviour
         {
             GroundPlayer();
         }
+        if (rayDown.distance <= bottDist && rayDown.collider.tag.Contains("Chest")) // walk on top of chests
+        {
+            GroundPlayer();
+        }
         if (rayDown.distance <= bottDist && rayDown.collider.tag == "breakable") // break leaves
         {
             StartCoroutine(DestroyLeaves(rayDown.collider.gameObject));
         }
-        CheckChest(rayLeft, rayRight);
-        
-        
-
-        //if(rayUp.distance < 0.9f && rayUp.collider.tag == "name")
-
+        //CheckChest(rayLeft, rayRight);
     }
 
     void CheckChest(RaycastHit2D rayLeft, RaycastHit2D rayRight)
@@ -277,21 +281,22 @@ public class PlayerController  : MonoBehaviour
         bool hitChest = false;
         GameObject chestObject = null;
         ChestController cc = null;
-        if (rayLeft.distance <= bottDist && rayLeft.collider.tag.Contains("Chest"))
+        if (rayLeft.distance <= 0.3f && rayLeft.collider.tag.Contains("Chest"))
         {
             hitChest = true;
             chestObject = rayLeft.collider.gameObject;
             cc = chestObject.GetComponent<ChestController>();
         }
-        if (rayRight.distance <= bottDist && rayRight.collider.tag.Contains("Chest"))
+        else if (rayRight.distance <= 0.3f && rayRight.collider.tag.Contains("Chest"))
         {
             hitChest = true;
             chestObject = rayRight.collider.gameObject;
             cc = chestObject.GetComponent<ChestController>();
         }
+        else return;
         if (!hitChest) return;
-        if (!cc.isClosed) return;
-        cc.Open();
+        else if (!cc.isClosed) return;
+        else cc.Open();
     }
 
     private IEnumerator DestroyLeaves(GameObject go)
