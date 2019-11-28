@@ -60,6 +60,29 @@ public class PlayerController  : MonoBehaviour
     {
         // controls
         moveX = Input.GetAxis("Horizontal");
+        //Input.GetAxis("Vertical");
+        animator.SetFloat("XSpeed", Mathf.Abs(rb.velocity.x));
+        animator.SetFloat("YSpeed", rb.velocity.y);
+        //if (Input.GetButtonDown("Horizontal")) ; // cool code to check button
+
+        if (Input.GetButtonDown("Jump"))
+        {
+            if(Player.instance.isGrounded || Player.instance.canJump || rb.velocity.y == 0 || Player.instance.isHanging) Jump();
+        }
+        // animations
+        // player direction
+        if (moveX < 0.0f && !Player.instance.facingLeft) FlipPlayer();
+        else if (moveX > 0.0f && Player.instance.facingLeft) FlipPlayer();
+        // physics
+        rb.velocity = new Vector2(
+            moveX * Player.instance.speed,
+            rb.velocity.y
+        );
+    }
+    void MoveJoypad()
+    {
+        // controls
+        moveX = Input.GetAxis("Horizontal");
         animator.SetFloat("XSpeed", Mathf.Abs(rb.velocity.x));
         animator.SetFloat("YSpeed", rb.velocity.y);
         //if (Input.GetButtonDown("Horizontal")) ; // cool code to check button
@@ -98,7 +121,7 @@ public class PlayerController  : MonoBehaviour
 
     void Jump()
     {
-        Player.instance.speed = Player.instance.maxSpeed;
+        //Player.instance.speed = Player.instance.maxSpeed;
         rb.gravityScale = 1;
         rb.AddForce(Vector2.up * Player.instance.jumpForce);
         Player.instance.isGrounded = false;

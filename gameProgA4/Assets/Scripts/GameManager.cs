@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     // Awake is called before the game starts 
     void Awake()
     {
-        maxStage = 2;
+        maxStage = 3;
         currentStage = 1;
         // check that it exists
         if (instance == null) instance = this;
