@@ -230,12 +230,12 @@ public class PlayerController  : MonoBehaviour
         // cast a ray from the top of the player
         RaycastHit2D rayUp = Physics2D.Raycast(
             transform.position,
-            Vector2.up // shoot a ray down
+            Vector2.up // shoot a ray up
         );
         // cast a ray to the left of the player
         RaycastHit2D rayLeft = Physics2D.Raycast(
             transform.position,
-            Vector2.left // shoot a ray down
+            Vector2.left // shoot a ray left
         );
         // cast a ray to the right of the player
         RaycastHit2D rayRight = Physics2D.Raycast(
@@ -264,9 +264,34 @@ public class PlayerController  : MonoBehaviour
         {
             StartCoroutine(DestroyLeaves(rayDown.collider.gameObject));
         }
+        CheckChest(rayLeft, rayRight);
+        
+        
 
         //if(rayUp.distance < 0.9f && rayUp.collider.tag == "name")
 
+    }
+
+    void CheckChest(RaycastHit2D rayLeft, RaycastHit2D rayRight)
+    {
+        bool hitChest = false;
+        GameObject chestObject = null;
+        ChestController cc = null;
+        if (rayLeft.distance <= bottDist && rayLeft.collider.tag.Contains("Chest"))
+        {
+            hitChest = true;
+            chestObject = rayLeft.collider.gameObject;
+            cc = chestObject.GetComponent<ChestController>();
+        }
+        if (rayRight.distance <= bottDist && rayRight.collider.tag.Contains("Chest"))
+        {
+            hitChest = true;
+            chestObject = rayRight.collider.gameObject;
+            cc = chestObject.GetComponent<ChestController>();
+        }
+        if (!hitChest) return;
+        if (!cc.isClosed) return;
+        cc.Open();
     }
 
     private IEnumerator DestroyLeaves(GameObject go)

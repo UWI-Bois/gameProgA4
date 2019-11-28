@@ -30,6 +30,10 @@ public class AudioManager : MonoBehaviour
             audioSource.PlayOneShot(leaves);
         }
     }
+    public void PlayChest()
+    {
+        if (chest != null) audioSource.PlayOneShot(chest);
+    }
     public void PlayLevelUp()
     {
         if (levelup != null) audioSource.PlayOneShot(levelup);
