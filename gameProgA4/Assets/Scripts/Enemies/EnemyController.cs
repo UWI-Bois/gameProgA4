@@ -162,11 +162,11 @@ public class EnemyController : MonoBehaviour
 
     void Die()
     {
+        if(!attributes.isDead) AudioManager.instance.PlayOra();
         attributes.isDead = true;
         attributes.isDamaged = false;
         animator.SetBool("isDead", true);
         animator.SetBool("isDamaged", false);
-        AudioManager.instance.PlayOra();
         StartCoroutine(DestroyEnemy());
     }
 }
