@@ -26,7 +26,7 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (attributes.canRage && attributes.hp < (attributes.hp / 2)) attributes.Enrage();
+        if (attributes.canRage && attributes.hp <= attributes.enragedHP) attributes.Enrage();
         CheckY();
         if (attributes.isDead) return; // if dead, dont check or move
         animator.SetFloat("velX", Mathf.Abs(rb.velocity.x));
@@ -39,8 +39,22 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
+        //if (attributes.canRage && attributes.hp <= attributes.enragedHP) attributes.Enrage();
         SleepEnemy();
         CheckStuck();
+    }
+
+    public void GetEaten(int amt)
+    {
+        attributes.hp -= amt;
+        attributes.isDamaged = true;
+        animator.SetBool("isDamaged", attributes.isDamaged);
+        if (attributes.hp > 0) attributes.PlayHit();
+        if (attributes.hp <= 0){
+            attributes.wasEaten = true;
+            Die();
+        }
+        attributes.Enrage();
     }
 
     void SleepEnemy()
@@ -146,6 +160,7 @@ public class EnemyController : MonoBehaviour
     public void TakeDamage()
     {
         attributes.hp -= Player.instance.damage;
+        //if (attributes.canRage && attributes.hp <= attributes.enragedHP) attributes.Enrage();
         attributes.isDamaged = true;
         animator.SetBool("isDamaged", attributes.isDamaged);
         if (attributes.hp > 0) attributes.PlayHit();
@@ -156,13 +171,15 @@ public class EnemyController : MonoBehaviour
     {
         yield return new WaitForSeconds(2);
         attributes.PlayDead();
-        Player.instance.IncreaseEXP(attributes.expVal);
+        if(!attributes.wasEaten)
+            Player.instance.IncreaseEXP(attributes.expVal);
         Destroy(gameObject);
     }
 
     void Die()
     {
-        if(!attributes.isDead) AudioManager.instance.PlayOra();
+        if(!attributes.isDead && !attributes.wasEaten) AudioManager.instance.PlayOra();
+        if(!attributes.isDead && attributes.wasEaten) attributes.PlayEat();
         attributes.isDead = true;
         attributes.isDamaged = false;
         animator.SetBool("isDead", true);

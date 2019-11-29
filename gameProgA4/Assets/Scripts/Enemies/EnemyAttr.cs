@@ -4,20 +4,20 @@ using UnityEngine;
 
 public class EnemyAttr : MonoBehaviour
 {
-    public int hp, expVal, scoreVal, damage;
+    public int hp, expVal, scoreVal, damage, enragedHP;
     public int speed, jumpForce, fallSpeed, maxSpeed;
-    public bool isStuck, isFalling, facingLeft, isGrounded, isDamaged, isDead, canRage;
+    public bool isStuck, isFalling, facingLeft, isGrounded, isDamaged, isDead, canRage, isEnraged, wasEaten;
     public int direction; // right = 1, left = -1;
     public float hitDist = 0.6f;
     public new string name;
 
     public AudioSource audioSource;
-    public AudioClip hit, dead, enrage;
+    public AudioClip hit, dead, enrage, eat;
     // Start is called before the first frame update
     void Start()
     {
-        hp = expVal = scoreVal = maxSpeed = speed = jumpForce = fallSpeed = damage = direction = 1;
-        isStuck = isFalling = facingLeft = isGrounded = isDamaged = isDead = canRage = false;
+        hp = expVal = scoreVal = maxSpeed = speed = jumpForce = fallSpeed = enragedHP = damage = direction = 1;
+        isStuck = isFalling = facingLeft = isGrounded = isDamaged = isDead = canRage = isEnraged = wasEaten = false;
         name = "enemy";
         audioSource = null; 
         hit = dead = enrage = null;
@@ -47,14 +47,25 @@ public class EnemyAttr : MonoBehaviour
             audioSource.PlayOneShot(enrage);
         }
     }
+    public void PlayEat()
+    {
+        if (eat != null)
+        {
+            if (audioSource.clip == eat) return;
+            audioSource.PlayOneShot(eat);
+        }
+    }
 
     public void Enrage()
     {
-        hp += 12;
+        if (isEnraged) return;
+        hp += hp/2;
         damage += 2;
         speed += 2;
         expVal *= 2;
         canRage = false;
+        isEnraged = true;
+        //print("enraged!");
         PlayEnrage();
     }
 

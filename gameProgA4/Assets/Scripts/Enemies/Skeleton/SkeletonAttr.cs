@@ -7,7 +7,7 @@ public class SkeletonAttr : EnemyAttr
     // Start is called before the first frame update
     void Start()
     {
-        hp = 10;
+        hp = 14;
         damage = 2;
         speed = maxSpeed = 2;
         expVal = scoreVal = 5;
@@ -16,6 +16,7 @@ public class SkeletonAttr : EnemyAttr
         direction = 1;
         facingLeft = false; 
         isGrounded = canRage = true;
+        enragedHP = hp / 2;
         name = "skele";
 
         audioSource = GetComponent<AudioSource>();

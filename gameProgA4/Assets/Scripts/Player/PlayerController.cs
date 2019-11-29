@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController  : MonoBehaviour
 {
@@ -172,7 +173,7 @@ public class PlayerController  : MonoBehaviour
 
         if (collision.gameObject.tag.Contains("Chest"))
         {
-            print("collided with chest");
+            //print("collided with chest");
             ChestController cc = collision.gameObject.GetComponent<ChestController>();
             if(cc.isClosed) cc.Open();
         }

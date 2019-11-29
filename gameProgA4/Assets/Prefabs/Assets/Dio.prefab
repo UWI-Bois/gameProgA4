@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 8622357679244609585}
   - component: {fileID: 8622357679244609599}
   - component: {fileID: 2477736127154602107}
+  - component: {fileID: 1768942980400337951}
   m_Layer: 0
   m_Name: Dio
   m_TagString: Enemy_Dio
@@ -150,6 +151,7 @@ MonoBehaviour:
   expVal: 0
   scoreVal: 0
   damage: 0
+  enragedHP: 0
   speed: 0
   jumpForce: 0
   fallSpeed: 0
@@ -161,13 +163,16 @@ MonoBehaviour:
   isDamaged: 0
   isDead: 0
   canRage: 0
+  isEnraged: 0
+  wasEaten: 0
   direction: 0
   hitDist: 0.6
   name: 
   audioSource: {fileID: 0}
   hit: {fileID: 8300000, guid: 0f8862ae49ecc83459690c11bb4074eb, type: 3}
-  dead: {fileID: 8300000, guid: 2fbb7f4bdb0c8424ea35169f9997c634, type: 3}
-  enrage: {fileID: 8300000, guid: e04b60b6d01f51f4d843a02c891a416b, type: 3}
+  dead: {fileID: 8300000, guid: e04b60b6d01f51f4d843a02c891a416b, type: 3}
+  enrage: {fileID: 8300000, guid: 2fbb7f4bdb0c8424ea35169f9997c634, type: 3}
+  eat: {fileID: 8300000, guid: 92cf935e454455a408af6eeea1edeee1, type: 3}
 --- !u!114 &8622357679244609585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -298,3 +303,15 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1768942980400337951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8622357679244609590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c65252c1188ad2f42b45eaa530d6e5b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
