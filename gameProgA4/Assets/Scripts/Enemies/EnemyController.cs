@@ -20,12 +20,16 @@ public class EnemyController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         rb.freezeRotation = true;
+        rb.mass = 300;
+        rb.gravityScale = 5;
         //print("loaded: " + attributes.name);
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (rb.mass != 300) rb.mass = 300;
+        if (rb.gravityScale == 1) rb.gravityScale = 50;
         if (attributes.canRage && attributes.hp <= attributes.enragedHP) attributes.Enrage();
         CheckY();
         if (attributes.isDead) return; // if dead, dont check or move
