@@ -62,6 +62,7 @@ public class GameManager : MonoBehaviour
     {
         timeLeft -= Time.deltaTime;
         timeElapsed += Time.deltaTime;
+        if (timeLeft <= 0) KillPlayer();
         if (hudManager != null) hudManager.ResetHUD();
     }
 

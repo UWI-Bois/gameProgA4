@@ -16,6 +16,7 @@ TagManager:
   - breakable
   - Chest_Wood
   - Chest_Iron
+  - Chest_Gold
   layers:
   - Default
   - TransparentFX

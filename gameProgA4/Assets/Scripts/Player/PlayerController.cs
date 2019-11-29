@@ -162,8 +162,12 @@ public class PlayerController  : MonoBehaviour
             { 
 
             }
-            Player.instance.TakeDamage(enemy.attributes.damage);
-            if (Player.instance.health <= 0) GameManager.instance.KillPlayer();
+            if (!enemy.attributes.isDead)
+            {
+                Player.instance.TakeDamage(enemy.attributes.damage);
+                if (Player.instance.health <= 0) GameManager.instance.KillPlayer();
+            }
+            
         }
 
         if (collision.gameObject.tag.Contains("Chest"))
@@ -255,7 +259,7 @@ public class PlayerController  : MonoBehaviour
             }
             Bounce();
             enemy.TakeDamage();
-
+            Player.instance.score += 1;
         }
         if (rayDown.distance <= bottDist && rayDown.collider.tag == "hangable") // walk on top of hangable terrain
         {
