@@ -26,7 +26,7 @@ public class EnemyController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         rb.freezeRotation = true;
-        rb.mass = 300;
+        //rb.mass = 300;
         //rb.gravityScale = 5;
         //print("loaded: " + attributes.name);
 
@@ -37,36 +37,72 @@ public class EnemyController : MonoBehaviour
     void FixedUpdate()
     {
         if (attributes.isDead) return; // check this first
-        
         attributes.jumpForce = 20;
-        if (rb.mass != massNum) rb.mass = massNum;
-        if (attributes.canRage && attributes.hp <= attributes.enragedHP) attributes.Enrage();
-        
-
-        if (Mathf.Abs(rb.velocity.y) < 0.3) GroundEnemy();
-        else attributes.isGrounded = false;
-
+        CheckStates();
         CheckY();
-        
-        
-        if(attributes.isGrounded)Move();
-        //CheckStuck(); // ENABLE THIS
+        if(!attributes.isFalling && attributes.isGrounded) Move();
         //if (attributes.isStuck) Jump(); // check this last
-        //checkRaycast();
-        if (rb.velocity.magnitude < 0.01) Jump();
 
         if (attributes.name == "dio" && attributes.isEnraged && attributes.hp != attributes.enragedHP)
             Physics2D.IgnoreLayerCollision(attributes.layerNum, 13, false);
 
         Fall();
+        if (rb.gravityScale > 1 && !attributes.isFalling) rb.gravityScale = 1;
+    }
+
+    private void CheckStates()
+    {
+        CheckVertical();
+        CheckHorizontal();
+        CheckDamaged();
+        CheckStuck();
+    }
+
+    private void CheckDamaged()
+    {
+        if (attributes.hp != attributes.maxHp) attributes.isDamaged = true;
+        else attributes.isDamaged = false;
+        if (attributes.canRage && attributes.hp <= attributes.enragedHP) attributes.Enrage();
+    }
+
+    private void CheckHorizontal()
+    {
+        float vel = Mathf.Abs(rb.velocity.x);
+        if (vel > 0.01) // going right
+        {
+            attributes.facingLeft = false;
+        }
+        if (rb.velocity.x < 0.01) // going left
+        {
+            attributes.facingLeft = true;
+        }
+    }
+
+    private void CheckVertical()
+    {
+        //print("checking vertical, rb.y = " + rb.velocity.y);
+        if (rb.velocity.y > 0.01) // jumping
+        {
+            attributes.isGrounded = true;
+            attributes.isFalling = false;
+        }
+        else if (rb.velocity.y < 0.01)
+        {
+            attributes.isGrounded = false;
+            attributes.isFalling = true;
+        }
+        else if (rb.velocity.y == 0)
+        {
+            attributes.isGrounded = true;
+            attributes.isFalling = false;
+        }
+        animator.SetBool("isGrounded", attributes.isGrounded);
+        if (attributes.isFalling) Fall();
     }
 
     private void Update()
     {
         initPos = gameObject.transform.position;
-        //if (attributes.canRage && attributes.hp <= attributes.enragedHP) attributes.Enrage();
-        //SleepEnemy(); // ENABLE THIS
-        //if (attributes.isStuck) Jump();
     }
 
     public void GetEaten(int amt)
@@ -82,32 +118,12 @@ public class EnemyController : MonoBehaviour
         attributes.Enrage();
     }
 
-    void UnStick()
-    {
-        Vector3 newPos = new Vector3(
-            gameObject.transform.position.x,
-            gameObject.transform.position.y + 1,
-            0
-            );
-        gameObject.transform.position = newPos;
-        attributes.isStuck = false;
-    }
-
-    void GroundEnemy()
-    {
-        attributes.isGrounded = true;
-        animator.SetBool("isGrounded", true);
-    }
-
     void Jump()
     {
         print(attributes.name + " is jumping with force = " + attributes.jumpForce);
         rb.gravityScale = 1;
         rb.mass = 1;
         rb.AddForce(Vector2.up * attributes.jumpForce);
-        attributes.isGrounded = false;
-        attributes.isStuck = false;
-        animator.SetBool("isGrounded", attributes.isGrounded);
     }
 
     private void CheckY()
@@ -121,8 +137,9 @@ public class EnemyController : MonoBehaviour
 
     void Move()
     {
-        attributes.speed = attributes.maxSpeed;
-        //if (attributes.isFalling) return;
+        //if(attributes.isStuck)
+            attributes.speed = attributes.maxSpeed;
+
         rb.velocity = new Vector2(
             attributes.direction, 0
         ) * attributes.speed;
@@ -134,23 +151,20 @@ public class EnemyController : MonoBehaviour
 
     void CheckStuck()
     {
-        if (rb.velocity == Vector2.zero)
+        if (rb.velocity == Vector2.zero && !attributes.isFalling)
         {
             //Jump();
             attributes.isStuck = true;
+            //attributes.speed = 0;
         }
-        else if (Math.Abs(rb.velocity.x) < 0.01)
+        else if (Math.Abs(rb.velocity.x) < 0.01 && !attributes.isFalling)
         {
             //Jump();
             attributes.isStuck = true;
+            //attributes.speed = 0;
         }
-        else if (initPos == rb.position)
-        {
-            print("same pos stuck");
-            attributes.isStuck = true;
-        }
-
         else attributes.isStuck = false;
+        if (attributes.isStuck) UnStick();
     }
     public IEnumerator Attack()
     {
@@ -188,7 +202,7 @@ public class EnemyController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "groundable") GroundEnemy();
+        //if (collision.gameObject.tag == "groundable") GroundEnemy();
         if (collision.gameObject.tag == "hangable" || collision.gameObject.tag.Contains("breakable")) Flip();
         if (collision.gameObject.tag.Contains("Enemy")) WalkThrough(collision);
         if (collision.gameObject.tag == "Player") StartCoroutine(Attack());
@@ -196,17 +210,12 @@ public class EnemyController : MonoBehaviour
 
     void Fall()
     {
-        if(Mathf.Abs(rb.velocity.y) > 0.01)
-        {
-            attributes.speed = 0;
-            attributes.isFalling = true;
-            rb.gravityScale++;
-        }
-        else
-        {
-            attributes.isFalling = false;
-            attributes.speed = attributes.maxSpeed;
-        }
+        if (!attributes.isFalling || attributes.isGrounded) return;
+        print(attributes.name + " is falling with force = " + attributes.jumpForce);
+        rb.gravityScale = 1;
+        rb.mass = 1;
+        rb.AddForce(Vector2.down * attributes.jumpForce);
+        CheckVertical();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -253,9 +262,14 @@ public class EnemyController : MonoBehaviour
     {
         yield return new WaitForSeconds(2);
         attributes.PlayDead();
-        if(!attributes.wasEaten)
+        if (!attributes.wasEaten)
             Player.instance.IncreaseEXP(attributes.expVal);
         Destroy(gameObject);
+    }
+    public IEnumerator UnStick()
+    {
+        yield return new WaitForSeconds(2);
+        Jump();
     }
 
     void Die()
