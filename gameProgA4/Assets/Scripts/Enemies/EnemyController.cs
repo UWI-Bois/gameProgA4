@@ -85,7 +85,7 @@ public class EnemyController : MonoBehaviour
 
     void Jump()
     {
-        print(attributes.name + " is jumping with force = " + attributes.jumpForce);
+        //print(attributes.name + " is jumping with force = " + attributes.jumpForce);
         rb.gravityScale = 1;
         rb.mass = 1;
         rb.AddForce(Vector2.up * attributes.jumpForce);

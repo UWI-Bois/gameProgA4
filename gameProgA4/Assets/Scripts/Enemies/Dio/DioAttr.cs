@@ -11,7 +11,7 @@ public class DioAttr : EnemyAttr
         damage = 10;
         speed = maxSpeed = 2;
         expVal = scoreVal = 5;
-        jumpForce = 50;
+        jumpForce = 10;
         fallSpeed = 3;
         direction = 1;
         facingLeft = false; 
