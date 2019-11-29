@@ -17,6 +17,7 @@ public class EnemyController : MonoBehaviour
     void Start()
     {
         massNum = 5;
+        
         //boxCollider = GetComponent<BoxCollider2D>();
         //print(boxCollider.ToString());
         if (gameObject.tag.Contains("Slime")) attributes = GetComponent<SlimeAttr>();
@@ -33,10 +34,11 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        attributes.jumpForce = 20;
         if (rb.mass != massNum) rb.mass = massNum;
         if (attributes.canRage && attributes.hp <= attributes.enragedHP) attributes.Enrage();
         CheckStuck(); // ENABLE THIS
-        if (Mathf.Abs(rb.velocity.y) < 0.01) GroundEnemy();
+        if (Mathf.Abs(rb.velocity.y) < 0.3) GroundEnemy();
         else attributes.isGrounded = false;
         CheckY();
         if (attributes.isDead) return; // if dead, dont check or move
@@ -83,9 +85,11 @@ public class EnemyController : MonoBehaviour
 
     void Jump()
     {
+        print(attributes.name + " is jumping with force = " + attributes.jumpForce);
         rb.gravityScale = 1;
+        rb.mass = 1;
         rb.AddForce(Vector2.up * attributes.jumpForce);
-        attributes.isGrounded = false;
+        //attributes.isGrounded = false;
         animator.SetBool("isGrounded", attributes.isGrounded);
     }
 
@@ -112,12 +116,12 @@ public class EnemyController : MonoBehaviour
     {
         if (rb.velocity == Vector2.zero)
         {
-            Jump();
+            //Jump();
             attributes.isStuck = true;
         }
         else if (Math.Abs(rb.velocity.x) < 0.01)
         {
-            Jump();
+            //Jump();
             attributes.isStuck = true;
         }
         else attributes.isStuck = false;

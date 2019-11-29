@@ -12,7 +12,7 @@ public class SlimeAttr : EnemyAttr
         damage = 1;
         speed = maxSpeed = 2;
         expVal = scoreVal = 3;
-        jumpForce = 20;
+        jumpForce = 50;
         fallSpeed = 3;
         direction = -1;
         facingLeft = isGrounded = true;
