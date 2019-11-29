@@ -27,7 +27,7 @@ public class ChestController : MonoBehaviour
         AudioManager.instance.PlayChest();
         if (score) Player.instance.score += 10;
         if (hp) Player.instance.health += 10;
-        if (exp) Player.instance.exp += 10;
+        if (exp) Player.instance.IncreaseEXP(10);
     }
     
 
