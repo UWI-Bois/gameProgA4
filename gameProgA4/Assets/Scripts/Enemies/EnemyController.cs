@@ -200,7 +200,7 @@ public class EnemyController : MonoBehaviour
         {
             attributes.speed = 0;
             attributes.isFalling = true;
-            rb.gravityScale++;
+            //rb.gravityScale++;
         }
         else
         {
