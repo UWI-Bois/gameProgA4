@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyAttr : MonoBehaviour
 {
-    public int hp, expVal, scoreVal, damage, enragedHP, layerNum;
+    public int hp, expVal, scoreVal, damage, enragedHP, layerNum, maxHp;
     public int speed, jumpForce, fallSpeed, maxSpeed;
     public bool isStuck, isFalling, facingLeft, isGrounded, isDamaged, isDead, canRage, isEnraged, wasEaten;
     public int direction; // right = 1, left = -1;

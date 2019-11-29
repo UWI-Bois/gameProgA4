@@ -8,9 +8,12 @@ public class EnemySpawner : MonoBehaviour
     public GameObject enemy1, enemy2, enemiesParentGO;
     public float timer, timerMax;
     public bool canSpawn;
+    public int enemies, maxEnemies;
     // Start is called before the first frame update
     void Start()
     {
+        enemies = 1;
+        maxEnemies = 4 + 1;
         timer = timerMax = 5f;
         canSpawn = false;
         spawn1 = gameObject.transform.Find("spawn1");
@@ -21,17 +24,18 @@ public class EnemySpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        enemies = GameObject.Find("Enemies").transform.childCount;
         CheckTimer();
         //print(GameManager.instance.timeElapsed);
     }
 
     void CheckTimer()
     {
-        timer -= Time.deltaTime;
-        if ((int)timer == 0)
+        timer += Time.deltaTime;
+        if ((int)timer % 5 == 0 && enemies < maxEnemies && !GameManager.instance.win)
         {
             canSpawn = true;
-            timer = timerMax;
+            //timer = timerMax;
             Spawn();
         }
         else canSpawn = false;

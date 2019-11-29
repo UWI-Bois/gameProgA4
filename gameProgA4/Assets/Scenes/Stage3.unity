@@ -547,7 +547,7 @@ PrefabInstance:
     - target: {fileID: 8622357679244609588, guid: f7faeb9ace04518438fae22436b16140,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.61
+      value: -3.46
       objectReference: {fileID: 0}
     - target: {fileID: 8622357679244609588, guid: f7faeb9ace04518438fae22436b16140,
         type: 3}
@@ -3027,6 +3027,8 @@ MonoBehaviour:
   timer: 0
   timerMax: 0
   canSpawn: 0
+  enemies: 0
+  maxEnemies: 0
 --- !u!4 &1220148647
 Transform:
   m_ObjectHideFlags: 0

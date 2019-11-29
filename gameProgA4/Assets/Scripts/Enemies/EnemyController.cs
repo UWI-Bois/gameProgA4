@@ -29,34 +29,44 @@ public class EnemyController : MonoBehaviour
         rb.mass = 300;
         //rb.gravityScale = 5;
         //print("loaded: " + attributes.name);
+
+        if (attributes.name == "slime") attributes.hp += (int)gameObject.transform.localScale.x;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (attributes.isDead) return; // check this first
+        
         attributes.jumpForce = 20;
         if (rb.mass != massNum) rb.mass = massNum;
         if (attributes.canRage && attributes.hp <= attributes.enragedHP) attributes.Enrage();
-        CheckStuck(); // ENABLE THIS
+        
+
         if (Mathf.Abs(rb.velocity.y) < 0.3) GroundEnemy();
         else attributes.isGrounded = false;
+
         CheckY();
-        if (attributes.isDead) return; // if dead, dont check or move
-        animator.SetFloat("velX", Mathf.Abs(rb.velocity.x));
-        animator.SetFloat("velY", rb.velocity.y);
-        initPos = rb.position;
-        Fall();
-        if(attributes.isGrounded)Move();
-        if (attributes.isStuck) Jump();
-        //checkRaycast();
         
+        
+        if(attributes.isGrounded)Move();
+        //CheckStuck(); // ENABLE THIS
+        //if (attributes.isStuck) Jump(); // check this last
+        //checkRaycast();
+        if (rb.velocity.magnitude < 0.01) Jump();
+
+        if (attributes.name == "dio" && attributes.isEnraged && attributes.hp != attributes.enragedHP)
+            Physics2D.IgnoreLayerCollision(attributes.layerNum, 13, false);
+
+        Fall();
     }
 
     private void Update()
     {
+        initPos = gameObject.transform.position;
         //if (attributes.canRage && attributes.hp <= attributes.enragedHP) attributes.Enrage();
         //SleepEnemy(); // ENABLE THIS
-        if (attributes.isStuck) Jump();
+        //if (attributes.isStuck) Jump();
     }
 
     public void GetEaten(int amt)
@@ -72,9 +82,15 @@ public class EnemyController : MonoBehaviour
         attributes.Enrage();
     }
 
-    void SleepEnemy()
+    void UnStick()
     {
-        if (rb.velocity == Vector2.zero) rb.Sleep();
+        Vector3 newPos = new Vector3(
+            gameObject.transform.position.x,
+            gameObject.transform.position.y + 1,
+            0
+            );
+        gameObject.transform.position = newPos;
+        attributes.isStuck = false;
     }
 
     void GroundEnemy()
@@ -85,11 +101,12 @@ public class EnemyController : MonoBehaviour
 
     void Jump()
     {
-        //print(attributes.name + " is jumping with force = " + attributes.jumpForce);
+        print(attributes.name + " is jumping with force = " + attributes.jumpForce);
         rb.gravityScale = 1;
         rb.mass = 1;
         rb.AddForce(Vector2.up * attributes.jumpForce);
-        //attributes.isGrounded = false;
+        attributes.isGrounded = false;
+        attributes.isStuck = false;
         animator.SetBool("isGrounded", attributes.isGrounded);
     }
 
@@ -109,6 +126,9 @@ public class EnemyController : MonoBehaviour
         rb.velocity = new Vector2(
             attributes.direction, 0
         ) * attributes.speed;
+        initPos = rb.position;
+        animator.SetFloat("velX", Mathf.Abs(rb.velocity.x));
+        animator.SetFloat("velY", rb.velocity.y);
         //if (attributes.isStuck) Jump();
     }
 
@@ -124,6 +144,12 @@ public class EnemyController : MonoBehaviour
             //Jump();
             attributes.isStuck = true;
         }
+        else if (initPos == rb.position)
+        {
+            print("same pos stuck");
+            attributes.isStuck = true;
+        }
+
         else attributes.isStuck = false;
     }
     public IEnumerator Attack()
@@ -192,14 +218,15 @@ public class EnemyController : MonoBehaviour
     {
         //Physics.IgnoreCollision(gameObject.collider, )
         EnemyController eCol = col.gameObject.GetComponent<EnemyController>();
-        print("Attempting to walkthrough: collided with: " + eCol.attributes.toString());
-        if (attributes.name == "dio")
+        //print("Attempting to walkthrough: collided with: " + eCol.attributes.toString());
+        if (attributes.name == "dio" && attributes.isEnraged)
         {
             DioController dioC = gameObject.GetComponent<DioController>();
             dioC.EatFriend(col.gameObject);
+            //Physics2D.IgnoreLayerCollision(attributes.layerNum, eCol.attributes.layerNum, false);
             return;
         }
-        Physics2D.IgnoreLayerCollision(attributes.layerNum, eCol.attributes.layerNum, true);
+        else Physics2D.IgnoreLayerCollision(attributes.layerNum, eCol.attributes.layerNum, true);
         
     }
 
@@ -239,6 +266,7 @@ public class EnemyController : MonoBehaviour
         attributes.isDamaged = false;
         animator.SetBool("isDead", true);
         animator.SetBool("isDamaged", false);
+        if (attributes.name == "dio") GameManager.instance.win = true;
         StartCoroutine(DestroyEnemy());
     }
 }
