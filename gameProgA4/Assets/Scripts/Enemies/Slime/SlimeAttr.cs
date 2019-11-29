@@ -12,11 +12,12 @@ public class SlimeAttr : EnemyAttr
         damage = 1;
         speed = maxSpeed = 2;
         expVal = scoreVal = 3;
-        jumpForce = 200;
+        jumpForce = 20;
         fallSpeed = 3;
         direction = -1;
         facingLeft = isGrounded = true;
         name = "slime";
+        layerNum = 12;
 
         audioSource = GetComponent<AudioSource>();
 

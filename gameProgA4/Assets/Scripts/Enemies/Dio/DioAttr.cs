@@ -11,13 +11,14 @@ public class DioAttr : EnemyAttr
         damage = 10;
         speed = maxSpeed = 2;
         expVal = scoreVal = 5;
-        jumpForce = 0;
+        jumpForce = 50;
         fallSpeed = 3;
         direction = 1;
         facingLeft = false; 
         isGrounded = canRage = true;
         enragedHP = hp / 2;
         name = "dio";
+        layerNum = 10;
 
         audioSource = GetComponent<AudioSource>();
         //print(gameObject.tag.ToString());

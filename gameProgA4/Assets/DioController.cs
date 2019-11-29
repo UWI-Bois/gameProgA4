@@ -16,8 +16,9 @@ public class DioController : MonoBehaviour
         if (collision.gameObject.tag.Contains("Skeleton") && ec.attributes.isEnraged) EatFriend(collision.gameObject);
     }
 
-    void EatFriend(GameObject enemy)
+    public void EatFriend(GameObject enemy)
     {
+        if (!ec.attributes.isEnraged) return;
         EnemyController skeleController = enemy.GetComponent<EnemyController>();
         ec.Attack();
         int gain = skeleController.attributes.hp + 1;

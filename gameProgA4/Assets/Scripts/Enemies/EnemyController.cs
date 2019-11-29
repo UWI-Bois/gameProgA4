@@ -10,10 +10,15 @@ public class EnemyController : MonoBehaviour
     public Animator animator;
     public EnemyAttr attributes;
     public Vector2 initPos;
+    public BoxCollider2D boxCollider;
+    public int massNum;
 
     // Start is called before the first frame update
     void Start()
     {
+        massNum = 5;
+        //boxCollider = GetComponent<BoxCollider2D>();
+        //print(boxCollider.ToString());
         if (gameObject.tag.Contains("Slime")) attributes = GetComponent<SlimeAttr>();
         if (gameObject.tag.Contains("Skeleton")) attributes = GetComponent<SkeletonAttr>();
         if (gameObject.tag.Contains("Dio")) attributes = GetComponent<DioAttr>();
@@ -21,22 +26,26 @@ public class EnemyController : MonoBehaviour
         animator = GetComponent<Animator>();
         rb.freezeRotation = true;
         rb.mass = 300;
-        rb.gravityScale = 5;
+        //rb.gravityScale = 5;
         //print("loaded: " + attributes.name);
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (rb.mass != 300) rb.mass = 300;
-        if (rb.gravityScale == 1) rb.gravityScale = 50;
+        if (rb.mass != massNum) rb.mass = massNum;
         if (attributes.canRage && attributes.hp <= attributes.enragedHP) attributes.Enrage();
+        CheckStuck(); // ENABLE THIS
+        if (Mathf.Abs(rb.velocity.y) < 0.01) GroundEnemy();
+        else attributes.isGrounded = false;
         CheckY();
         if (attributes.isDead) return; // if dead, dont check or move
         animator.SetFloat("velX", Mathf.Abs(rb.velocity.x));
         animator.SetFloat("velY", rb.velocity.y);
         initPos = rb.position;
-        Move();
+        Fall();
+        if(attributes.isGrounded)Move();
+        if (attributes.isStuck) Jump();
         //checkRaycast();
         
     }
@@ -44,8 +53,8 @@ public class EnemyController : MonoBehaviour
     private void Update()
     {
         //if (attributes.canRage && attributes.hp <= attributes.enragedHP) attributes.Enrage();
-        SleepEnemy();
-        CheckStuck();
+        //SleepEnemy(); // ENABLE THIS
+        if (attributes.isStuck) Jump();
     }
 
     public void GetEaten(int amt)
@@ -91,6 +100,8 @@ public class EnemyController : MonoBehaviour
 
     void Move()
     {
+        attributes.speed = attributes.maxSpeed;
+        //if (attributes.isFalling) return;
         rb.velocity = new Vector2(
             attributes.direction, 0
         ) * attributes.speed;
@@ -99,15 +110,16 @@ public class EnemyController : MonoBehaviour
 
     void CheckStuck()
     {
-        if (rb.IsSleeping())
+        if (rb.velocity == Vector2.zero)
         {
-            attributes.isStuck = true;
-            rb.WakeUp();
             Jump();
+            attributes.isStuck = true;
         }
-        else if (rb.velocity == Vector2.zero) Jump();
-        //else if (rb.position == initPos) attributes.isStuck = true;
-        //else if (rb.velocity.y != 0) attributes.isStuck = true;
+        else if (Math.Abs(rb.velocity.x) < 0.01)
+        {
+            Jump();
+            attributes.isStuck = true;
+        }
         else attributes.isStuck = false;
     }
     public IEnumerator Attack()
@@ -148,8 +160,43 @@ public class EnemyController : MonoBehaviour
     {
         if (collision.gameObject.tag == "groundable") GroundEnemy();
         if (collision.gameObject.tag == "hangable" || collision.gameObject.tag.Contains("breakable")) Flip();
-        if (collision.gameObject.tag.Contains("Enemy")) Flip();
+        if (collision.gameObject.tag.Contains("Enemy")) WalkThrough(collision);
         if (collision.gameObject.tag == "Player") StartCoroutine(Attack());
+    }
+
+    void Fall()
+    {
+        if(Mathf.Abs(rb.velocity.y) > 0.01)
+        {
+            attributes.speed = 0;
+            attributes.isFalling = true;
+            rb.gravityScale++;
+        }
+        else
+        {
+            attributes.isFalling = false;
+            attributes.speed = attributes.maxSpeed;
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        //if (collision.gameObject.tag.Contains("Enemy")) Physics.IgnoreCollision(boxCollider, collision.collider);
+    }
+
+    void WalkThrough(Collision2D col)
+    {
+        //Physics.IgnoreCollision(gameObject.collider, )
+        EnemyController eCol = col.gameObject.GetComponent<EnemyController>();
+        print("Attempting to walkthrough: collided with: " + eCol.attributes.toString());
+        if (attributes.name == "dio")
+        {
+            DioController dioC = gameObject.GetComponent<DioController>();
+            dioC.EatFriend(col.gameObject);
+            return;
+        }
+        Physics2D.IgnoreLayerCollision(attributes.layerNum, eCol.attributes.layerNum, true);
+        
     }
 
     void Flip()

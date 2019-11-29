@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyAttr : MonoBehaviour
 {
-    public int hp, expVal, scoreVal, damage, enragedHP;
+    public int hp, expVal, scoreVal, damage, enragedHP, layerNum;
     public int speed, jumpForce, fallSpeed, maxSpeed;
     public bool isStuck, isFalling, facingLeft, isGrounded, isDamaged, isDead, canRage, isEnraged, wasEaten;
     public int direction; // right = 1, left = -1;
@@ -16,11 +16,15 @@ public class EnemyAttr : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        layerNum = 0;
         hp = expVal = scoreVal = maxSpeed = speed = jumpForce = fallSpeed = enragedHP = damage = direction = 1;
         isStuck = isFalling = facingLeft = isGrounded = isDamaged = isDead = canRage = isEnraged = wasEaten = false;
         name = "enemy";
         audioSource = null; 
         hit = dead = enrage = null;
+
+        // new defaults
+        jumpForce = 50;
     }
     public void PlayHit()
     {
@@ -72,6 +76,7 @@ public class EnemyAttr : MonoBehaviour
     public string toString()
     {
         string s = "hp: " + hp
+            + "\n layerNum: " + layerNum
             + "\n expVal: " + expVal
             + "\n scoreVal: " + scoreVal
             + "\n speed: " + speed
