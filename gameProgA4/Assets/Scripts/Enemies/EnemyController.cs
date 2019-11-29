@@ -26,10 +26,7 @@ public class EnemyController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         rb.freezeRotation = true;
-        //rb.mass = 300;
-        //rb.gravityScale = 5;
         //print("loaded: " + attributes.name);
-
         if (attributes.name == "slime") attributes.hp += (int)gameObject.transform.localScale.x;
     }
 
@@ -40,14 +37,15 @@ public class EnemyController : MonoBehaviour
         attributes.jumpForce = 20;
         CheckStates();
         CheckY();
-        if(!attributes.isFalling && attributes.isGrounded) Move();
-        //if (attributes.isStuck) Jump(); // check this last
+        if (attributes.isFalling && !attributes.isStuck && !attributes.isGrounded) Fall();
+        if (!attributes.isFalling && attributes.isGrounded) Move();
+        if (attributes.isStuck) Jump(); // check this last
 
         if (attributes.name == "dio" && attributes.isEnraged && attributes.hp != attributes.enragedHP)
             Physics2D.IgnoreLayerCollision(attributes.layerNum, 13, false);
 
-        Fall();
         if (rb.gravityScale > 1 && !attributes.isFalling) rb.gravityScale = 1;
+        
     }
 
     private void CheckStates()
@@ -97,12 +95,7 @@ public class EnemyController : MonoBehaviour
             attributes.isFalling = false;
         }
         animator.SetBool("isGrounded", attributes.isGrounded);
-        if (attributes.isFalling) Fall();
-    }
-
-    private void Update()
-    {
-        initPos = gameObject.transform.position;
+        
     }
 
     public void GetEaten(int amt)
@@ -137,16 +130,16 @@ public class EnemyController : MonoBehaviour
 
     void Move()
     {
-        //if(attributes.isStuck)
-            attributes.speed = attributes.maxSpeed;
-
+        attributes.speed = attributes.maxSpeed;
+        //print(attributes.name + "is moving speed = " + attributes.speed);
         rb.velocity = new Vector2(
             attributes.direction, 0
         ) * attributes.speed;
-        initPos = rb.position;
+        //initPos = rb.position;
         animator.SetFloat("velX", Mathf.Abs(rb.velocity.x));
         animator.SetFloat("velY", rb.velocity.y);
-        //if (attributes.isStuck) Jump();
+        CheckStuck();
+        if (attributes.isStuck) UnStick();
     }
 
     void CheckStuck()
@@ -211,11 +204,25 @@ public class EnemyController : MonoBehaviour
     void Fall()
     {
         if (!attributes.isFalling || attributes.isGrounded) return;
+        if (rb.velocity.y == 0)
+        {
+            attributes.isFalling = false;
+            attributes.isGrounded = true;
+            return;
+        }
         print(attributes.name + " is falling with force = " + attributes.jumpForce);
         rb.gravityScale = 1;
         rb.mass = 1;
-        rb.AddForce(Vector2.down * attributes.jumpForce);
-        CheckVertical();
+        rb.AddForce(Vector2.down * 5);
+        
+        if (rb.velocity.y == 0)
+        {
+            attributes.isFalling = false;
+            attributes.isGrounded = true;
+            return;
+        }
+        
+        //CheckVertical();
     }
 
     private void OnCollisionEnter(Collision collision)
